@@ -33,6 +33,7 @@ initial begin
 
     logic [31:0] imem [31:0];
     logic [31:0] expected_instruction;
+    logic [31:0] test_address;
     $readmemh("test_imemory.hex", imem);
 
     // Reset check
@@ -60,6 +61,14 @@ initial begin
     #20
     $display("%h", c0.regfile.registers[18]);
     `assert(c0.regfile.registers[18], 32'HDEADBEEF)
+
+    // SW logic check
+    test_address = (int'(32'hC)) / 4;
+
+    `assert(c0.data_memory.mem[test_address], 32'hF2F2F2F2)
+
+    @(posedge clk);
+    `assert(c0.data_memory.mem[test_address], 32'hDEADBEEF)
 
     $dumpflush;
     $finish;

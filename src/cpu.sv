@@ -74,18 +74,6 @@ control control_unit(
     .reg_write(reg_write)
 );
 
-// SIGN EXTENDER
-
-logic [24:0] raw_imm;
-assign raw_imm = instruction[31:7];
-wire[31:0] immediate;
-
-signext sign_extender(
-    .raw_src(raw_imm),
-    .imm_source(imm_source),
-    .immediate(immediate)
-);
-
 // REGFILE
 
 // INPUTS
@@ -121,6 +109,18 @@ regfile regfile(
     .write_address(write_address)
 );
 
+// SIGN EXTENDER
+
+logic [24:0] raw_imm;
+assign raw_imm = instruction[31:7];
+wire[31:0] immediate;
+
+signext sign_extender(
+    .raw_src(raw_imm),
+    .imm_source(imm_source),
+    .immediate(immediate)
+);
+
 // ALU
 
 wire [31:0] alu_result;
@@ -147,8 +147,8 @@ memory #(
     // Inputs
     .clk(clk),
     .address(alu_result),
-    .write_data(32'b0),
-    .write_enable(1'b0),
+    .write_data(read_data2),
+    .write_enable(mem_write),
     .rst_n(1'b1),
 
     // Outputs
