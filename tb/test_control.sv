@@ -32,13 +32,24 @@ end
 
 initial begin
 
+    // TEST FOR LW
     op = 7'b0000011;
 
-    #1
+    #10
     `assert(alu_control, 000)
     `assert(imm_source, 00)
     `assert(mem_write, 0)
     `assert(reg_write, 1)
+
+    // TEST FOR SW
+    #10
+    op = 7'b0100011;
+
+    #10
+    `assert(alu_control, 000)
+    `assert(imm_source, 01)
+    `assert(mem_write, 1)
+    `assert(reg_write, 0)
 
     $finish;
 
