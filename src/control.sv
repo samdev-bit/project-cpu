@@ -2,7 +2,6 @@
 
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNUSEDSIGNAL */
-/* verilator lint_off UNUSEDSIGNAL */
 
 module control(
     // IN
