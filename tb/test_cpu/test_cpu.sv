@@ -42,7 +42,9 @@ initial begin
     #10
     rst_n = 0;
     #10
+    test_address = (int'(32'hC)) / 4;
     `assert(c0.pc, 8'b00000000)
+    `assert(c0.data_memory.mem[test_address], 32'hF2F2F2F2) // Checking if initial value at byte 12 is correct for the SW check
     rst_n = 1;
 
     // Read check
@@ -53,19 +55,11 @@ initial begin
     end
 
     // LW logic check
-    rst_n = 0;
-    #20;
-    rst_n = 1;
-    #20;
 
     #20
-    $display("%h", c0.regfile.registers[18]);
     `assert(c0.regfile.registers[18], 32'HDEADBEEF)
 
     // SW logic check
-    test_address = (int'(32'hC)) / 4;
-
-    `assert(c0.data_memory.mem[test_address], 32'hF2F2F2F2)
 
     @(posedge clk);
     `assert(c0.data_memory.mem[test_address], 32'hDEADBEEF)
