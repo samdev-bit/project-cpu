@@ -8,6 +8,7 @@
 
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_off WIDTHEXPAND */
 
 module test_control;
     logic [6:0] op;
@@ -19,11 +20,10 @@ module test_control;
     logic [1:0] imm_source;
     logic mem_write;
     logic reg_write;
+    logic alu_src;
+    logic result_src;
 
     control c0 (.*);
-
-/* verilator lint_off UNDRIVEN */
-/* verilator lint_off UNUSEDSIGNAL */
 
 initial begin
     $dumpfile("test_control_waveform.vcd");
@@ -31,6 +31,16 @@ initial begin
 end
 
 initial begin
+
+    // TEST FOR DEFAULT
+    op = 7'b0000000;
+
+    #10
+    `assert(reg_write, 0)
+    `assert(mem_write, 0)
+    `assert(imm_source, 0)
+    `assert(alu_control, 000)
+
 
     // TEST FOR LW
     op = 7'b0000011;
@@ -40,6 +50,8 @@ initial begin
     `assert(imm_source, 00)
     `assert(mem_write, 0)
     `assert(reg_write, 1)
+    `assert(alu_src, 1)
+    `assert(result_src, 1)
 
     // TEST FOR SW
     #10
@@ -50,6 +62,18 @@ initial begin
     `assert(imm_source, 01)
     `assert(mem_write, 1)
     `assert(reg_write, 0)
+    `assert(alu_src, 1)
+
+    // TEST FOR ADD
+    #10
+    op = 7'b0110011;
+
+    #10
+    `assert(alu_control, 000)
+    `assert(reg_write, 1)
+    `assert(mem_write, 0)
+    `assert(alu_src, 0)
+    `assert(result_src, 0)
 
     $finish;
 
