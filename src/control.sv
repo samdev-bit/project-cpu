@@ -2,6 +2,7 @@
 
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_off UNUSEDSIGNAL */
 
 module control(
     // IN
@@ -46,7 +47,6 @@ always_comb begin
         // ADD
         7'b0110011 : begin
             reg_write = 1'b1;
-            imm_source = 2'bxx;
             mem_write = 1'b0;
             alu_op = 2'b10;
             alu_src = 1'b0; // register read
