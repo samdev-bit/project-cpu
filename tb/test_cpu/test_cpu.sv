@@ -54,15 +54,17 @@ initial begin
         `assert(c0.instruction, expected_instruction)
     end
 
-    // LW logic check
-
     #20
+
+    // LW logic check
     `assert(c0.regfile.registers[18], 32'HDEADBEEF)
 
     // SW logic check
-
-    @(posedge clk);
     `assert(c0.data_memory.mem[test_address], 32'hDEADBEEF)
+
+    // ADD logic check
+    `assert(c0.regfile.registers[19], 32'h00000AAA)
+    `assert(c0.regfile.registers[20], 32'hDEADC999)
 
     $dumpflush;
     $finish;
