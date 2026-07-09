@@ -55,6 +55,8 @@ assign f3 = instruction[14:12];
 logic [6:0] f7;
 assign f7 = instruction[31:25];
 wire alu_zero;
+wire alu_src;
+wire result_src;
 
 // out
 wire [2:0] alu_control;
@@ -71,7 +73,9 @@ control control_unit(
     .alu_control(alu_control),
     .imm_source(imm_source),
     .mem_write(mem_write),
-    .reg_write(reg_write)
+    .reg_write(reg_write),
+    .alu_src(alu_src),
+    .result_src(result_src)
 );
 
 // REGFILE
@@ -88,7 +92,10 @@ wire [31:0] read_data2;
 
 logic [31:0] write_data;
 always_comb begin : wbSelect
-    write_data = mem_read;
+    if(result_src == 1)
+        write_data = mem_read;
+    else
+        write_data = alu_result;
 end
 
 regfile regfile(
@@ -127,7 +134,10 @@ wire [31:0] alu_result;
 logic [31:0] alu_src2;
 
 always_comb begin : srcBSelect
-    alu_src2 = immediate;
+    if(alu_src == 1)
+        alu_src2 = immediate;
+    else
+        alu_src2 = read_data2;
 end
 
 alu alu_inst(
