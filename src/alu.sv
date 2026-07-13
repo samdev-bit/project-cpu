@@ -18,6 +18,9 @@ always_comb begin
         // AND
         3'b010 : alu_result = src1 & src2;
 
+        //OR
+        3'b011 : alu_result = src1 | src2;
+
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
     endcase
