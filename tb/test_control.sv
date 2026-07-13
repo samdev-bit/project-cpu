@@ -2,8 +2,7 @@
 
 `define assert(signal, value) \
     if ((signal) !== (value)) begin \
-        $display("ASSERTION FAILED in %m: signal (%h) != value (%h)", (signal), (value)); \
-        $finish; \
+        $error("ASSERTION FAILED in %m: signal (%h) != value (%h) in file %s at line %0d", (signal), (value), (`__FILE__), (`__LINE__)); \
     end
 
 /* verilator lint_off UNDRIVEN */
@@ -67,9 +66,23 @@ initial begin
     // TEST FOR ADD
     #10
     op = 7'b0110011;
+    func3 = 3'b000;
 
     #10
     `assert(alu_control, 000)
+    `assert(reg_write, 1)
+    `assert(mem_write, 0)
+    `assert(alu_src, 0)
+    `assert(result_src, 0)
+
+
+    // TEST FOR AND
+    #10
+    op = 7'b0110011;
+    func3 =  3'b111;
+
+    #10
+    `assert(alu_control, 3'b010)
     `assert(reg_write, 1)
     `assert(mem_write, 0)
     `assert(alu_src, 0)
