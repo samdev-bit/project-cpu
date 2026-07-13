@@ -43,7 +43,7 @@ always_comb begin
             alu_src = 1'b1; //imm read
         end
 
-        // ADD
+        // R-type
         7'b0110011 : begin
             reg_write = 1'b1;
             mem_write = 1'b0;
@@ -69,13 +69,16 @@ always_comb begin
         // LW, SW
         2'b00 : alu_control = 3'b000;
 
-        // R-type instructions
+        // R-type
         2'b10 : begin 
             case(func3)
+                // ADD
                 3'b000 : if(func7[5] == 1'b0) 
                             alu_control = 3'b000;
                          else 
                             alu_control = 3'b001;
+                // AND
+                3'b111 : alu_control = 3'b010;
                 default : alu_control = 3'b111;
             endcase
         end
