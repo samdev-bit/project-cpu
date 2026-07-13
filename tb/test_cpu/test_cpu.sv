@@ -48,7 +48,7 @@ initial begin
     rst_n = 1;
 
     // Read check
-    for (int i = 0; i < 5; i++) begin
+    for (int i = 0; i < 8; i++) begin
         @(posedge clk);
         expected_instruction = imem[i];
         `assert(c0.instruction, expected_instruction)
@@ -68,6 +68,11 @@ initial begin
 
     // AND logic check
     `assert(c0.regfile.registers[21], 32'hDEAD8889)
+
+    // OR logic check
+    `assert(c0.regfile.registers[5], 32'h125F552D)
+    `assert(c0.regfile.registers[6], 32'h7F4FD46A)
+    `assert(c0.regfile.registers[7], 32'h7F5FD56F)
 
     $dumpflush;
     $finish;
