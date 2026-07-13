@@ -25,14 +25,21 @@ logic [31:0] expected;
 initial begin
 
     // Test function works when control is 000
-    alu_control = 3'b000;
     for (int i = 0; i<1000; i++) begin
         src1 = $urandom();
         src2 = $urandom();
 
+        // TEST FOR 000
+        alu_control = 3'b000;
         #1
         expected = (src1 + src2);
+        #1
+        `assert(alu_result, expected)
 
+        // TEST FOR 010
+        alu_control = 3'b010;
+        #1
+        expected = (src1 & src2);
         #1
         `assert(alu_result, expected)
     end
