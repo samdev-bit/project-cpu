@@ -66,6 +66,9 @@ initial begin
     `assert(c0.regfile.registers[19], 32'h00000AAA)
     `assert(c0.regfile.registers[20], 32'hDEADC999)
 
+    // AND logic check
+    `assert(c0.regfile.registers[21], 32'hDEAD8889)
+
     $dumpflush;
     $finish;
 end
