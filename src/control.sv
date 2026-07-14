@@ -2,6 +2,7 @@
 
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_off LATCH */
 
 module control(
     // IN
@@ -16,12 +17,14 @@ module control(
     output logic mem_write,
     output logic reg_write,
     output logic alu_src,
-    output logic result_src
+    output logic result_src,
+    output logic PCsrc
 );
 
 // MAIN DECODER
 
 logic [1:0] alu_op;
+logic branch;
 always_comb begin
     case(op)
         // LW
@@ -32,6 +35,7 @@ always_comb begin
             alu_op = 2'b00;
             alu_src = 1'b1; // imm read
             result_src = 1'b1; // memory write
+            branch = 1'b0;
         end
 
         //SW
@@ -41,6 +45,7 @@ always_comb begin
             mem_write = 1'b1;
             alu_op = 2'b00;
             alu_src = 1'b1; //imm read
+            branch = 1'b0; 
         end
 
         // R-type
@@ -50,6 +55,17 @@ always_comb begin
             alu_op = 2'b10;
             alu_src = 1'b0; // register read
             result_src = 1'b0; // alu read
+            branch = 1'b0;
+        end
+
+        // B-type
+        7'b1100011 : begin
+            reg_write = 1'b0;
+            imm_source = 2'b10;
+            mem_write = 1'b0;
+            alu_op = 2'b01;
+            alu_src = 1'b0; // register read
+            branch = 1'b1;
         end
 
         // Everything else
@@ -58,9 +74,12 @@ always_comb begin
             imm_source = 2'b00;
             mem_write = 1'b0;
             alu_op = 2'b00;
+            branch = 1'b0;
         end
     endcase
 end
+
+assign PCsrc = alu_zero & branch;
 
 // ALU DECODER
 
@@ -86,6 +105,9 @@ always_comb begin
                 default : alu_control = 3'b111;
             endcase
         end
+
+        // BEQ
+        2'b01 : alu_control = 3'b001;
 
         //Everything else
         default : alu_control = 3'b111;
