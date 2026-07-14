@@ -21,6 +21,7 @@ module test_control;
     logic reg_write;
     logic alu_src;
     logic result_src;
+    logic PCsrc;
 
     control c0 (.*);
 
@@ -39,6 +40,7 @@ initial begin
     `assert(mem_write, 0)
     `assert(imm_source, 0)
     `assert(alu_control, 000)
+    `assert(PCsrc, 0)
 
 
     // TEST FOR LW
@@ -51,6 +53,7 @@ initial begin
     `assert(reg_write, 1)
     `assert(alu_src, 1)
     `assert(result_src, 1)
+    `assert(PCsrc, 0)
 
     // TEST FOR SW
     #10
@@ -62,6 +65,7 @@ initial begin
     `assert(mem_write, 1)
     `assert(reg_write, 0)
     `assert(alu_src, 1)
+    `assert(PCsrc, 0)
 
     // TEST FOR ADD
     #10
@@ -74,6 +78,7 @@ initial begin
     `assert(mem_write, 0)
     `assert(alu_src, 0)
     `assert(result_src, 0)
+    `assert(PCsrc, 0)
 
 
     // TEST FOR AND
@@ -87,6 +92,7 @@ initial begin
     `assert(mem_write, 0)
     `assert(alu_src, 0)
     `assert(result_src, 0)
+    `assert(PCsrc, 0)
 
     // TEST FOR OR
     #10
@@ -99,6 +105,27 @@ initial begin
     `assert(mem_write, 0)
     `assert(alu_src, 0)
     `assert(result_src, 0)
+    `assert(PCsrc, 0)
+
+    // TEST FOR BEQ
+    #10
+    op = 7'b1100011;
+    alu_zero = 1'b0;
+
+    // Test when branch should not be taken
+    #10
+    `assert(alu_control, 3'b001)
+    `assert(imm_source, 2'b10)
+    `assert(mem_write, 0)
+    `assert(reg_write, 0)
+    `assert(alu_src, 0)
+    `assert(PCsrc, 0)
+
+    // Test when branch should be taken
+    #5
+    alu_zero = 1'b1;
+    #5
+    `assert(PCsrc, 1)
 
     $finish;
 
