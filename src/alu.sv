@@ -21,6 +21,9 @@ always_comb begin
         //OR
         3'b011 : alu_result = src1 | src2;
 
+        // SUB
+        3'b001 : alu_result = src1 + (~src2 + 1'b1);
+
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
     endcase
