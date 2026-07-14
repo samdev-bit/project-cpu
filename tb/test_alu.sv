@@ -2,8 +2,7 @@
 
 `define assert(signal, value) \
     if ((signal) !== (value)) begin \
-        $display("ASSERTION FAILED in %m: signal (%h) != value (%h)", (signal), (value)); \
-        $finish; \
+        $error("ASSERTION FAILED in %m: signal (%h) != value (%h) in file %s at line %0d", (signal), (value), (`__FILE__), (`__LINE__)); \
     end
 
 module test_alu;
@@ -49,20 +48,27 @@ initial begin
         expected = (src1 | src2);
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR 001
+        alu_control = 3'b001;
+        #1
+        expected = (src1 - src2);
+        #1
+        `assert(alu_result, expected)
     end
 
     // Make sure zero flag works
     #1
-    alu_control = 3'b0;
+    alu_control = 3'b001;
     src1 = 123;
-    src2 = -123;
+    src2 = 123;
     #1
     `assert(zero, 1)
     `assert(alu_result, 0)
 
     // Make sure only 000 does something
     #1
-    alu_control = 3'b1;
+    alu_control = 3'b111;
     src1 = $urandom();
     src2 = $urandom();
     #1
