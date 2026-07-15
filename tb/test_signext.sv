@@ -2,8 +2,7 @@
 
 `define assert(signal, value) \
     if ((signal) !== (value)) begin \
-        $display("ASSERTION FAILED in %m: signal (%h) != value (%h)", (signal), (value)); \
-        $finish; \
+        $error("ASSERTION FAILED in %m: signal (%h) != value (%h) in file %s at line %0d", (signal), (value), (`__FILE__), (`__LINE__)); \
     end
 
 /* verilator lint_off UNUSEDSIGNAL */
@@ -17,9 +16,21 @@ module test_signext;
 
     signext s0 (.*);
 
+// S-type
 logic [11:0] imm;
 logic [6:0] imm_11_5;
 logic [4:0] imm_4_0;
+
+// B-type
+logic imm_12;
+logic imm_11;
+logic [5:0] imm_10_5;
+logic [3:0] imm_4_1;
+
+
+// MISC
+
+logic[24:0] test;
 
 initial begin
 
@@ -69,6 +80,38 @@ initial begin
 
         #10
         `assert(int'(immediate),int'(signed'(imm)))
+    end
+
+    // Randomized B-ty[e tests]
+    #100
+    for(int i = 0; i < 100; i++) begin 
+
+        // Test all positive values
+        imm = $urandom_range(0,12'b011111111111);
+        imm = imm << 1;
+        imm_12 = 1'b0;
+        imm_10_5 = imm[10:5];
+        imm_4_1 = imm[4:1];
+        imm_11 = imm[11];
+        raw_src = ({imm_12, imm_10_5} << 18) | ({imm_4_1, imm_11});
+        imm_source = 2'b10;
+
+        // Allow time for signals to propogate
+        #10
+        `assert(int'(immediate), int'({imm_12, imm}))
+
+        #10
+        // Test all negative values
+        imm = $urandom_range(12'b100000000000, 12'b111111111111);
+        imm = imm << 1;
+        imm_12 = 1'b1;
+        imm_10_5 = imm[11:5];
+        imm_4_1 = imm[4:1];
+        imm_11 = imm[11];
+        raw_src = ({imm_12, imm_10_5} << 18) | ({imm_4_1, imm_11});
+
+        #10
+        `assert(int'(immediate),int'(signed'({imm_12, imm})))
     end
 
     $finish;
