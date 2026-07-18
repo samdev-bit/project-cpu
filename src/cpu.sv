@@ -14,7 +14,10 @@ reg [31:0] pc;
 logic [31:0] pc_next;
 
 always_comb begin : pcSelect
-    pc_next = pc + 4;
+    if (PCsrc == 1'b1) 
+        pc_next = pc + immediate;
+    else
+        pc_next = pc + 4;
 end
 
 // D FLIP FLOP
@@ -63,6 +66,7 @@ wire [2:0] alu_control;
 wire [1:0] imm_source;
 wire mem_write;
 wire reg_write;
+wire PCsrc;
 
 control control_unit(
     .op(op),
@@ -75,7 +79,8 @@ control control_unit(
     .mem_write(mem_write),
     .reg_write(reg_write),
     .alu_src(alu_src),
-    .result_src(result_src)
+    .result_src(result_src),
+    .PCsrc(PCsrc)
 );
 
 // REGFILE
