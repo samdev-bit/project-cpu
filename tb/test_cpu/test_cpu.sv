@@ -2,8 +2,7 @@
 
 `define assert(signal, value) \
     if ((signal) !== (value)) begin \
-        $display("ASSERTION FAILED in %m: signal (%h) != value (%h)", (signal), (value)); \
-        $finish; \
+        $error("ASSERTION FAILED in %m: signal (%h) != value (%h) in file %s at line %0d", (signal), (value), (`__FILE__), (`__LINE__)); \
     end
 
 /* verilator lint_off UNUSEDSIGNAL */
@@ -54,7 +53,7 @@ initial begin
         `assert(c0.instruction, expected_instruction)
     end
 
-    #20
+    #10
 
     // LW logic check
     `assert(c0.regfile.registers[18], 32'HDEADBEEF)
@@ -73,6 +72,32 @@ initial begin
     `assert(c0.regfile.registers[5], 32'h125F552D)
     `assert(c0.regfile.registers[6], 32'h7F4FD46A)
     `assert(c0.regfile.registers[7], 32'h7F5FD56F)
+
+    // BEQ logic check
+    @(posedge clk);
+    `assert(c0.instruction, 32'h00730663)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'h00802B03) // previous branch should not be taken
+    #10
+    `assert(c0.regfile.registers[22], 32'hDEADBEEF)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'h01690863)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'h00002B03)
+    #10
+    `assert(c0.regfile.registers[22], 32'hAEAEAEAE)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'hFF6B0CE3)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'h00000663)
+
+    @(posedge clk);
+    `assert(c0.instruction, 32'h00000013)
 
     $dumpflush;
     $finish;
