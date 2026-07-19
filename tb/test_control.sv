@@ -20,7 +20,7 @@ module test_control;
     logic mem_write;
     logic reg_write;
     logic alu_src;
-    logic result_src;
+    logic [1:0] result_src;
     logic PCsrc;
 
     control c0 (.*);
@@ -52,7 +52,7 @@ initial begin
     `assert(mem_write, 0)
     `assert(reg_write, 1)
     `assert(alu_src, 1)
-    `assert(result_src, 1)
+    `assert(result_src, 2'b01)
     `assert(PCsrc, 0)
 
     // TEST FOR SW
@@ -77,7 +77,7 @@ initial begin
     `assert(reg_write, 1)
     `assert(mem_write, 0)
     `assert(alu_src, 0)
-    `assert(result_src, 0)
+    `assert(result_src, 2'b00)
     `assert(PCsrc, 0)
 
 
@@ -91,7 +91,7 @@ initial begin
     `assert(reg_write, 1)
     `assert(mem_write, 0)
     `assert(alu_src, 0)
-    `assert(result_src, 0)
+    `assert(result_src, 2'b00)
     `assert(PCsrc, 0)
 
     // TEST FOR OR
@@ -104,7 +104,7 @@ initial begin
     `assert(reg_write, 1)
     `assert(mem_write, 0)
     `assert(alu_src, 0)
-    `assert(result_src, 0)
+    `assert(result_src, 2'b00)
     `assert(PCsrc, 0)
 
     // TEST FOR BEQ
@@ -126,6 +126,18 @@ initial begin
     alu_zero = 1'b1;
     #5
     `assert(PCsrc, 1)
+
+    // TEST FOR JAL
+    #10
+    op = 7'b1101111;
+    alu_zero = 1'b0;
+    
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 2'b11)
+    `assert(mem_write, 1'b0)
+    `assert(result_src, 2'b10)
+    `assert(PCsrc, 1'b1)
 
     $finish;
 
