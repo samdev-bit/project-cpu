@@ -116,7 +116,7 @@ initial begin
     for(int i = 0; i < 100; i++) begin 
         // Test all positive values
         j_type_imm = $urandom_range(0,20'b01111111111111111111);
-        j_type_imm = j_type_imm << 1; // 159006
+        j_type_imm = j_type_imm << 1;
         raw_src = ({1'b0, j_type_imm[10:1], j_type_imm[11], j_type_imm[19:12]} << 5);
         imm_source = 2'b11;
 
