@@ -12,12 +12,15 @@ module cpu (
 
 reg [31:0] pc;
 logic [31:0] pc_next;
+logic [31:0] PCPlus4;
+
+assign PCPlus4 = pc + 4;
 
 always_comb begin : pcSelect
     if (PCsrc == 1'b1) 
         pc_next = pc + immediate;
     else
-        pc_next = pc + 4;
+        pc_next = PCPlus4;
 end
 
 // D FLIP FLOP
@@ -59,7 +62,7 @@ logic [6:0] f7;
 assign f7 = instruction[31:25];
 wire alu_zero;
 wire alu_src;
-wire result_src;
+wire [1:0] result_src;
 
 // out
 wire [2:0] alu_control;
@@ -97,10 +100,12 @@ wire [31:0] read_data2;
 
 logic [31:0] write_data;
 always_comb begin : wbSelect
-    if(result_src == 1)
-        write_data = mem_read;
-    else
-        write_data = alu_result;
+    case (result_src)
+        2'b00 : write_data = alu_result;
+        2'b01 : write_data = mem_read;
+        2'b10 : write_data = PCPlus4;
+        default : write_data = mem_read;
+    endcase
 end
 
 regfile regfile(
