@@ -99,6 +99,18 @@ initial begin
     @(posedge clk);
     `assert(c0.instruction, 32'h00000013)
 
+    // JAL logic check
+    #40
+    `assert(c0.instruction, 32'hFFDFF0EF)
+
+    #20
+    `assert(c0.instruction, 32'h00C000EF)
+
+    #20
+    `assert(c0.instruction, 32'h00C02383)
+    #10
+    `assert(c0.regfile.registers[7], 32'hDEADBEEF)
+
     $dumpflush;
     $finish;
 end
