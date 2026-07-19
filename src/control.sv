@@ -17,7 +17,7 @@ module control(
     output logic mem_write,
     output logic reg_write,
     output logic alu_src,
-    output logic result_src,
+    output logic [1:0] result_src,
     output logic PCsrc
 );
 
@@ -25,6 +25,8 @@ module control(
 
 logic [1:0] alu_op;
 logic branch;
+logic jump;
+
 always_comb begin
     case(op)
         // LW
@@ -34,8 +36,9 @@ always_comb begin
             mem_write = 1'b0;
             alu_op = 2'b00;
             alu_src = 1'b1; // imm read
-            result_src = 1'b1; // memory write
+            result_src = 2'b01; // memory read
             branch = 1'b0;
+            jump = 1'b0;
         end
 
         //SW
@@ -46,6 +49,7 @@ always_comb begin
             alu_op = 2'b00;
             alu_src = 1'b1; //imm read
             branch = 1'b0; 
+            jump = 1'b0;
         end
 
         // R-type
@@ -54,8 +58,9 @@ always_comb begin
             mem_write = 1'b0;
             alu_op = 2'b10;
             alu_src = 1'b0; // register read
-            result_src = 1'b0; // alu read
+            result_src = 2'b00; // alu read
             branch = 1'b0;
+            jump = 1'b0;
         end
 
         // B-type
@@ -66,6 +71,17 @@ always_comb begin
             alu_op = 2'b01;
             alu_src = 1'b0; // register read
             branch = 1'b1;
+            jump = 1'b0;
+        end
+
+        // J-type
+        7'b1101111 : begin
+            reg_write = 1'b1;
+            imm_source = 2'b11;
+            mem_write = 1'b0;
+            result_src = 2'b10;
+            branch = 1'b0;
+            jump = 1'b1;
         end
 
         // Everything else
@@ -75,11 +91,12 @@ always_comb begin
             mem_write = 1'b0;
             alu_op = 2'b00;
             branch = 1'b0;
+            jump = 1'b0;
         end
     endcase
 end
 
-assign PCsrc = alu_zero & branch;
+assign PCsrc = (alu_zero & branch) | jump;
 
 // ALU DECODER
 
