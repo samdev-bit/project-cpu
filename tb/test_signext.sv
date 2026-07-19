@@ -18,6 +18,7 @@ module test_signext;
 
 // S-type
 logic [11:0] imm;
+logic [19:0] j_type_imm;
 logic [6:0] imm_11_5;
 logic [4:0] imm_4_0;
 
@@ -27,10 +28,6 @@ logic imm_11;
 logic [5:0] imm_10_5;
 logic [3:0] imm_4_1;
 
-
-// MISC
-
-logic[24:0] test;
 
 initial begin
 
@@ -82,7 +79,7 @@ initial begin
         `assert(int'(immediate),int'(signed'(imm)))
     end
 
-    // Randomized B-ty[e tests]
+    // Randomized B-type tests
     #100
     for(int i = 0; i < 100; i++) begin 
 
@@ -112,6 +109,30 @@ initial begin
 
         #10
         `assert(int'(immediate),int'(signed'({imm_12, imm})))
+    end
+
+    // Randomized J-type tests
+    #100 
+    for(int i = 0; i < 100; i++) begin 
+        // Test all positive values
+        j_type_imm = $urandom_range(0,20'b01111111111111111111);
+        j_type_imm = j_type_imm << 1; // 159006
+        raw_src = ({1'b0, j_type_imm[10:1], j_type_imm[11], j_type_imm[19:12]} << 5);
+        imm_source = 2'b11;
+
+        // Allow time for signals to propogate
+        #10
+        `assert(int'(immediate), int'({1'b0, j_type_imm}))
+
+        // Test all negative values
+        j_type_imm = $urandom_range(20'b10000000000000000000, 20'b11111111111111111111);
+        j_type_imm = j_type_imm << 1;
+        raw_src = ({1'b1, j_type_imm[10:1], j_type_imm[11], j_type_imm[19:12]} << 5);
+        imm_source = 2'b11;
+
+        // Allow time for signals to propogate
+        #10
+        `assert(int'(immediate), int'(signed'({1'b1, j_type_imm})))
     end
 
     $finish;
