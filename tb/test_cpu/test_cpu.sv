@@ -111,6 +111,16 @@ initial begin
     #10
     `assert(c0.regfile.registers[7], 32'hDEADBEEF)
 
+
+    // ADDI tests
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[26], 32'hDEADC09A)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[25], 32'h7F4FD38B)
+
     $dumpflush;
     $finish;
 end
