@@ -84,6 +84,18 @@ always_comb begin
             jump = 1'b1;
         end
 
+        // ALU I-type
+        7'b0010011 : begin
+            reg_write = 1'b1;
+            imm_source = 2'b00;
+            alu_op = 2'b10;
+            alu_src = 1'b1;
+            mem_write = 1'b0;
+            result_src = 2'b00;
+            branch = 0;
+            jump = 0;
+        end
+
         // Everything else
         default : begin
             reg_write = 1'b0;
@@ -105,11 +117,11 @@ always_comb begin
         // LW, SW
         2'b00 : alu_control = 3'b000;
 
-        // R-type
+        // R-type and ALU I-type
         2'b10 : begin 
             case(func3)
                 // ADD
-                3'b000 : if(func7[5] == 1'b0) 
+                3'b000 : if((func7[5] == 1'b0) | op == 7'b0010011) 
                             alu_control = 3'b000;
                          else 
                             alu_control = 3'b001;
