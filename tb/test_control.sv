@@ -121,7 +121,7 @@ initial begin
     `assert(alu_src, 0)
     `assert(PCsrc, 0)
 
-    // Test when branch should be taken
+    // Test when branch should be taken#
     #5
     alu_zero = 1'b1;
     #5
@@ -138,6 +138,19 @@ initial begin
     `assert(mem_write, 1'b0)
     `assert(result_src, 2'b10)
     `assert(PCsrc, 1'b1)
+
+    // TEST FOR ADDI
+    #10
+    op = 7'b0010011;
+    func3 = 3'b000;
+    func7 = 7'b0100000;
+
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 2'b00)
+    `assert(mem_write, 1'b0)
+    `assert(alu_control, 1'b000)
+    `assert(PCsrc, 1'b0)
 
     $finish;
 
