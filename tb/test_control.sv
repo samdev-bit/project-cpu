@@ -16,12 +16,13 @@ module test_control;
     logic alu_zero;
 
     logic [2:0] alu_control;
-    logic [1:0] imm_source;
+    logic [2:0] imm_source;
     logic mem_write;
     logic reg_write;
     logic alu_src;
     logic [1:0] result_src;
     logic PCsrc;
+    logic [1:0] second_add_src;
 
     control c0 (.*);
 
@@ -38,7 +39,7 @@ initial begin
     #10
     `assert(reg_write, 0)
     `assert(mem_write, 0)
-    `assert(imm_source, 0)
+    `assert(imm_source, 3'b000)
     `assert(alu_control, 000)
     `assert(PCsrc, 0)
 
@@ -48,7 +49,7 @@ initial begin
 
     #10
     `assert(alu_control, 000)
-    `assert(imm_source, 00)
+    `assert(imm_source, 3'b000)
     `assert(mem_write, 0)
     `assert(reg_write, 1)
     `assert(alu_src, 1)
@@ -61,7 +62,7 @@ initial begin
 
     #10
     `assert(alu_control, 000)
-    `assert(imm_source, 01)
+    `assert(imm_source, 3'b001)
     `assert(mem_write, 1)
     `assert(reg_write, 0)
     `assert(alu_src, 1)
@@ -115,7 +116,7 @@ initial begin
     // Test when branch should not be taken
     #10
     `assert(alu_control, 3'b001)
-    `assert(imm_source, 2'b10)
+    `assert(imm_source, 3'b010)
     `assert(mem_write, 0)
     `assert(reg_write, 0)
     `assert(alu_src, 0)
@@ -134,7 +135,7 @@ initial begin
     
     #10
     `assert(reg_write, 1'b1)
-    `assert(imm_source, 2'b11)
+    `assert(imm_source, 3'b100)
     `assert(mem_write, 1'b0)
     `assert(result_src, 2'b10)
     `assert(PCsrc, 1'b1)
@@ -147,10 +148,34 @@ initial begin
 
     #10
     `assert(reg_write, 1'b1)
-    `assert(imm_source, 2'b00)
+    `assert(imm_source, 3'b000)
     `assert(mem_write, 1'b0)
     `assert(alu_control, 1'b000)
     `assert(PCsrc, 1'b0)
+
+    // TEST FOR LUI
+    #10
+    op = 7'b0110111;
+
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 3'b011)
+    `assert(mem_write, 1'b0)
+    `assert(result_src, 2'b11)
+    `assert(PCsrc, 1'b0)
+    `assert(second_add_src, 2'b01)
+
+    // TEST FOR AUIPC
+    #10
+    op = 7'b0010111;
+
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 3'b011)
+    `assert(mem_write, 1'b0)
+    `assert(result_src, 2'b11)
+    `assert(PCsrc, 1'b0)
+    `assert(second_add_src, 2'b00)
 
     $finish;
 
