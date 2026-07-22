@@ -121,6 +121,16 @@ initial begin
     #1
     `assert(c0.regfile.registers[25], 32'h7F4FD38B)
 
+    // AUIPC test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[5], 32'h1F1FA064)
+
+    // LUI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[5], 32'h2F2FA000)
+
     $dumpflush;
     $finish;
 end
