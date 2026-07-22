@@ -13,14 +13,23 @@ module cpu (
 reg [31:0] pc;
 logic [31:0] pc_next;
 logic [31:0] PCPlus4;
+logic [31:0] pc_plus_second_add;
 
 assign PCPlus4 = pc + 4;
 
 always_comb begin : pcSelect
     if (PCsrc == 1'b1) 
-        pc_next = pc + immediate;
+        pc_next = pc_plus_second_add;
     else
         pc_next = PCPlus4;
+end
+
+always_comb begin : second_add_select
+    case(second_add_src)
+        2'b00 : pc_plus_second_add = pc + immediate;
+        2'b01 : pc_plus_second_add = immediate;
+        default : pc_plus_second_add = immediate;
+    endcase
 end
 
 // D FLIP FLOP
@@ -66,10 +75,11 @@ wire [1:0] result_src;
 
 // out
 wire [2:0] alu_control;
-wire [1:0] imm_source;
+wire [2:0] imm_source;
 wire mem_write;
 wire reg_write;
 wire PCsrc;
+wire [1:0] second_add_src;
 
 control control_unit(
     .op(op),
@@ -83,7 +93,8 @@ control control_unit(
     .reg_write(reg_write),
     .alu_src(alu_src),
     .result_src(result_src),
-    .PCsrc(PCsrc)
+    .PCsrc(PCsrc),
+    .second_add_src(second_add_src)
 );
 
 // REGFILE
@@ -104,6 +115,7 @@ always_comb begin : wbSelect
         2'b00 : write_data = alu_result;
         2'b01 : write_data = mem_read;
         2'b10 : write_data = PCPlus4;
+        2'b11 : write_data = pc_plus_second_add;
         default : write_data = mem_read;
     endcase
 end
