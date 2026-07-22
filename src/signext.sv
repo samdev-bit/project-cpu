@@ -1,11 +1,9 @@
 `timescale 1ns / 1ps
 
-/* verilator lint_off UNUSEDSIGNAL */
-
 module signext(
     // IN
     input logic [24:0] raw_src,
-    input logic [1:0] imm_source,
+    input logic [2:0] imm_source,
 
     //OUT
     output logic [31:0] immediate
@@ -14,13 +12,15 @@ module signext(
 always_comb begin
     case (imm_source)
         // I-types
-        2'b00 : immediate = {{20{raw_src[24]}}, raw_src[24:13]};
+        3'b000 : immediate = {{20{raw_src[24]}}, raw_src[24:13]};
         // S-types
-        2'b01 : immediate = {{20{raw_src[24]}}, raw_src[24:18], raw_src[4:0]};
+        3'b001 : immediate = {{20{raw_src[24]}}, raw_src[24:18], raw_src[4:0]};
         // B-tpyes
-        2'b10 : immediate = {{20{raw_src[24]}}, raw_src[0], raw_src[23:18], raw_src[4:1], 1'b0};
+        3'b010 : immediate = {{20{raw_src[24]}}, raw_src[0], raw_src[23:18], raw_src[4:1], 1'b0};
         // J-type
-        2'b11 : immediate = {{12{raw_src[24]}}, raw_src[12:5], raw_src[13], raw_src[23:14], 1'b0};
+        3'b100 : immediate = {{12{raw_src[24]}}, raw_src[12:5], raw_src[13], raw_src[23:14], 1'b0};
+        //U-type
+        3'b011 : immediate = {raw_src[24:5], 12'b000000000000};
         default : immediate = 32'b0;
     endcase
 end
