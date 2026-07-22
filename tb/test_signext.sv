@@ -11,14 +11,13 @@
 
 module test_signext;
     logic [24:0] raw_src;
-    logic [1:0] imm_source;
+    logic [2:0] imm_source;
     logic [31:0] immediate;
 
     signext s0 (.*);
 
 // S-type
 logic [11:0] imm;
-logic [19:0] j_type_imm;
 logic [6:0] imm_11_5;
 logic [4:0] imm_4_0;
 
@@ -27,6 +26,9 @@ logic imm_12;
 logic imm_11;
 logic [5:0] imm_10_5;
 logic [3:0] imm_4_1;
+
+// J and U type
+logic [19:0] twenty_type_imm;
 
 
 initial begin
@@ -37,7 +39,7 @@ initial begin
     // Manual I-type tests
     #10
     // Initialize
-    imm_source = 2'b00;
+    imm_source = 3'b000;
     raw_src = 25'b0000011110111010101010101;
 
     // Test basic functionality 
@@ -62,7 +64,7 @@ initial begin
         imm_11_5 = imm[11:5];
         imm_4_0 = imm[4:0];
         raw_src = (imm_11_5 << 18) | (imm_4_0);
-        imm_source = 2'b01;
+        imm_source = 3'b001;
 
         // Allow time for signals to propogate
         #10
@@ -73,7 +75,7 @@ initial begin
         imm_11_5 = imm[11:5];
         imm_4_0 = imm[4:0];
         raw_src = (imm_11_5 << 18) | (imm_4_0);
-        imm_source = 2'b01;
+        imm_source = 3'b001;
 
         #10
         `assert(int'(immediate),int'(signed'(imm)))
@@ -91,7 +93,7 @@ initial begin
         imm_4_1 = imm[4:1];
         imm_11 = imm[11];
         raw_src = ({imm_12, imm_10_5} << 18) | ({imm_4_1, imm_11});
-        imm_source = 2'b10;
+        imm_source = 3'b010;
 
         // Allow time for signals to propogate
         #10
@@ -112,27 +114,49 @@ initial begin
     end
 
     // Randomized J-type tests
+    #100  
+    for(int i = 0; i < 100; i++) begin 
+        // Test all positive values
+        twenty_type_imm = $urandom_range(0,20'b01111111111111111111);
+        twenty_type_imm = twenty_type_imm << 1;
+        raw_src = ({1'b0, twenty_type_imm[10:1], twenty_type_imm[11], twenty_type_imm[19:12]} << 5);
+        imm_source = 3'b100;
+
+        // Allow time for signals to propogate
+        #10
+        `assert(int'(immediate), int'({1'b0, twenty_type_imm}))
+
+        // Test all negative values
+        twenty_type_imm = $urandom_range(20'b10000000000000000000, 20'b11111111111111111111);
+        twenty_type_imm = twenty_type_imm << 1;
+        raw_src = ({1'b1, twenty_type_imm[10:1], twenty_type_imm[11], twenty_type_imm[19:12]} << 5);
+        imm_source = 3'b100;
+
+        // Allow time for signals to propogate
+        #10
+        `assert(int'(immediate), int'(signed'({1'b1, twenty_type_imm})))
+    end
+
+    // Randomized U-type tests
     #100 
     for(int i = 0; i < 100; i++) begin 
         // Test all positive values
-        j_type_imm = $urandom_range(0,20'b01111111111111111111);
-        j_type_imm = j_type_imm << 1;
-        raw_src = ({1'b0, j_type_imm[10:1], j_type_imm[11], j_type_imm[19:12]} << 5);
-        imm_source = 2'b11;
+        twenty_type_imm = $urandom_range(0,20'b01111111111111111111);
+        raw_src = (twenty_type_imm << 5);
+        imm_source = 3'b011;
 
         // Allow time for signals to propogate
         #10
-        `assert(int'(immediate), int'({1'b0, j_type_imm}))
+        `assert(int'(immediate), int'({twenty_type_imm, 12'b000000000000}))
 
-        // Test all negative values
-        j_type_imm = $urandom_range(20'b10000000000000000000, 20'b11111111111111111111);
-        j_type_imm = j_type_imm << 1;
-        raw_src = ({1'b1, j_type_imm[10:1], j_type_imm[11], j_type_imm[19:12]} << 5);
-        imm_source = 2'b11;
+        // Test all positive values
+        twenty_type_imm = $urandom_range(20'b10000000000000000000,20'b11111111111111111111);
+        raw_src = (twenty_type_imm << 5);
+        imm_source = 3'b011;
 
         // Allow time for signals to propogate
         #10
-        `assert(int'(immediate), int'(signed'({1'b1, j_type_imm})))
+        `assert(int'(immediate), int'(signed'({twenty_type_imm, 12'b000000000000})))
     end
 
     $finish;
