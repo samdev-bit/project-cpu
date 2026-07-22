@@ -13,12 +13,13 @@ module control(
 
     // OUT
     output logic [2:0] alu_control,
-    output logic [1:0] imm_source,
+    output logic [2:0] imm_source,
     output logic mem_write,
     output logic reg_write,
     output logic alu_src,
     output logic [1:0] result_src,
-    output logic PCsrc
+    output logic PCsrc,
+    output logic [1:0] second_add_src
 );
 
 // MAIN DECODER
@@ -32,7 +33,7 @@ always_comb begin
         // LW
         7'b0000011 : begin
             reg_write = 1'b1;
-            imm_source = 2'b00;
+            imm_source = 3'b000;
             mem_write = 1'b0;
             alu_op = 2'b00;
             alu_src = 1'b1; // imm read
@@ -44,7 +45,7 @@ always_comb begin
         //SW
         7'b0100011 : begin
             reg_write = 1'b0;
-            imm_source = 2'b01;
+            imm_source = 3'b001;
             mem_write = 1'b1;
             alu_op = 2'b00;
             alu_src = 1'b1; //imm read
@@ -66,28 +67,30 @@ always_comb begin
         // B-type
         7'b1100011 : begin
             reg_write = 1'b0;
-            imm_source = 2'b10;
+            imm_source = 3'b010;
             mem_write = 1'b0;
             alu_op = 2'b01;
             alu_src = 1'b0; // register read
             branch = 1'b1;
             jump = 1'b0;
+            second_add_src = 2'b00;
         end
 
         // J-type
         7'b1101111 : begin
             reg_write = 1'b1;
-            imm_source = 2'b11;
+            imm_source = 3'b100;
             mem_write = 1'b0;
             result_src = 2'b10;
             branch = 1'b0;
             jump = 1'b1;
+            second_add_src = 2'b00;
         end
 
         // ALU I-type
         7'b0010011 : begin
             reg_write = 1'b1;
-            imm_source = 2'b00;
+            imm_source = 3'b000;
             alu_op = 2'b10;
             alu_src = 1'b1;
             mem_write = 1'b0;
@@ -96,10 +99,24 @@ always_comb begin
             jump = 0;
         end
 
+        // U-type
+        7'b0110111, 7'b0010111: begin
+            reg_write = 1'b1;
+            imm_source = 3'b011;
+            mem_write = 1'b0;
+            result_src = 2'b11;
+            branch = 0;
+            jump = 0;
+            case(op[5])
+                1'b1 : second_add_src = 2'b01;
+                1'b0 : second_add_src = 2'b00;
+            endcase
+        end
+
         // Everything else
         default : begin
             reg_write = 1'b0;
-            imm_source = 2'b00;
+            imm_source = 3'b000;
             mem_write = 1'b0;
             alu_op = 2'b00;
             branch = 1'b0;
