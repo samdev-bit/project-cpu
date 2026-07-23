@@ -56,7 +56,7 @@ initial begin
         #1
         `assert(alu_result, expected)
 
-        // TEST FOR <
+        // TEST FOR SLTI
         alu_control = 3'b101;
         #1
         expected = {31'b0, signed'(src1) < signed'(src2)};
