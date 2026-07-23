@@ -12,7 +12,7 @@ module control(
     input logic alu_zero,
 
     // OUT
-    output logic [2:0] alu_control,
+    output logic [3:0] alu_control,
     output logic [2:0] imm_source,
     output logic mem_write,
     output logic reg_write,
@@ -132,38 +132,41 @@ assign PCsrc = (alu_zero & branch) | jump;
 always_comb begin
     case(alu_op)
         // LW, SW
-        2'b00 : alu_control = 3'b000;
+        2'b00 : alu_control = 4'b0000;
 
         // R-type and ALU I-type
         2'b10 : begin 
             case(func3)
                 // ADD
                 3'b000 : if((func7[5] == 1'b0) | op == 7'b0010011) 
-                            alu_control = 3'b000;
+                            alu_control = 4'b0000;
                          else 
-                            alu_control = 3'b001;
+                            alu_control = 4'b0001;
                 
                 // AND
-                3'b111 : alu_control = 3'b010;
+                3'b111 : alu_control = 4'b0010;
 
                 // OR
-                3'b110 : alu_control = 3'b011;
+                3'b110 : alu_control = 4'b0011;
 
                 // SLTI
-                3'b010 : alu_control = 3'b101;
+                3'b010 : alu_control = 4'b0101;
 
                 // SLTIU
-                3'b011 : alu_control = 3'b111;
+                3'b011 : alu_control = 4'b0111;
 
-                default : alu_control = 3'b111;
+                // XOR
+                3'b100 : alu_control = 4'b1000;
+
+                default : alu_control = 4'b111;
             endcase
         end
 
         // BEQ
-        2'b01 : alu_control = 3'b001;
+        2'b01 : alu_control = 4'b0001;
 
         //Everything else
-        default : alu_control = 3'b111;
+        default : alu_control = 4'b0111;
     endcase
 end
 
