@@ -2,7 +2,7 @@
 
 module alu (
     // IN
-    input logic [2:0] alu_control,
+    input logic [3:0] alu_control,
     input logic [31:0] src1,
     input logic [31:0] src2,
     // OUT
@@ -13,22 +13,25 @@ module alu (
 always_comb begin
     case (alu_control)
         // ADD
-        3'b000 : alu_result = src1 + src2;
+        4'b0000 : alu_result = src1 + src2;
 
         // AND
-        3'b010 : alu_result = src1 & src2;
+        4'b0010 : alu_result = src1 & src2;
 
         //OR
-        3'b011 : alu_result = src1 | src2;
+        4'b0011 : alu_result = src1 | src2;
 
         // SUB
-        3'b001 : alu_result = src1 + (~src2 + 1'b1);
+        4'b0001 : alu_result = src1 + (~src2 + 1'b1);
 
         // SLTI
-        3'b101 : alu_result = {31'b0, signed'(src1) < signed'(src2)};
+        4'b0101 : alu_result = {31'b0, signed'(src1) < signed'(src2)};
 
         // SLTIU
-        3'b111 : alu_result = {31'b0, unsigned'(src1) < unsigned'(src2)};
+        4'b0111 : alu_result = {31'b0, unsigned'(src1) < unsigned'(src2)};
+
+        // XORI
+        4'b1000 : alu_result = src1 ^ src2;
 
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
