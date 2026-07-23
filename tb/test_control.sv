@@ -150,7 +150,9 @@ initial begin
     `assert(reg_write, 1'b1)
     `assert(imm_source, 3'b000)
     `assert(mem_write, 1'b0)
-    `assert(alu_control, 1'b000)
+    `assert(alu_control, 3'b000)
+    `assert(result_src, 2'b00)
+    `assert(alu_src, 1'b1)
     `assert(PCsrc, 1'b0)
 
     // TEST FOR LUI
@@ -176,6 +178,20 @@ initial begin
     `assert(result_src, 2'b11)
     `assert(PCsrc, 1'b0)
     `assert(second_add_src, 2'b00)
+
+    // TEST FOR SLTI
+    #10
+    op = 7'b0010011;
+    func3 = 3'b010;
+
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 3'b000)
+    `assert(mem_write, 1'b0)
+    `assert(alu_control, 3'b101)
+    `assert(result_src, 2'b00)
+    `assert(alu_src, 1'b1)
+    `assert(PCsrc, 1'b0)
 
     $finish;
 
