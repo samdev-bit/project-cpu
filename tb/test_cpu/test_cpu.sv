@@ -131,6 +131,15 @@ initial begin
     #1
     `assert(c0.regfile.registers[5], 32'h2F2FA000)
 
+    // SLTI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[23], 32'h00000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[23], 32'h00000001)
+
     $dumpflush;
     $finish;
 end
