@@ -55,6 +55,13 @@ initial begin
         expected = (src1 - src2);
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR <
+        alu_control = 3'b101;
+        #1
+        expected = {31'b0, signed'(src1) < signed'(src2)};
+        #1
+        `assert(alu_result, expected)
     end
 
     // Make sure zero flag works
