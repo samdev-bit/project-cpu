@@ -27,6 +27,9 @@ always_comb begin
         // SLTI
         3'b101 : alu_result = {31'b0, signed'(src1) < signed'(src2)};
 
+        // SLTIU
+        3'b111 : alu_result = {31'b0, unsigned'(src1) < unsigned'(src2)};
+
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
     endcase

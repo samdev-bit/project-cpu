@@ -62,6 +62,13 @@ initial begin
         expected = {31'b0, signed'(src1) < signed'(src2)};
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR SLTIU
+        alu_control = 3'b111;
+        #1
+        expected = {31'b0, unsigned'(src1) < unsigned'(src2)};
+        #1
+        `assert(alu_result, expected)
     end
 
     // Make sure zero flag works
@@ -71,14 +78,6 @@ initial begin
     src2 = 123;
     #1
     `assert(zero, 1)
-    `assert(alu_result, 0)
-
-    // Make sure only 000 does something
-    #1
-    alu_control = 3'b111;
-    src1 = $urandom();
-    src2 = $urandom();
-    #1
     `assert(alu_result, 0)
 
     $finish;
