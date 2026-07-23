@@ -148,6 +148,10 @@ always_comb begin
 
                 // OR
                 3'b110 : alu_control = 3'b011;
+
+                // SLTI
+                3'b010 : alu_control = 3'b101;
+
                 default : alu_control = 3'b111;
             endcase
         end
