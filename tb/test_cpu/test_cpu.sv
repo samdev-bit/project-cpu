@@ -30,7 +30,7 @@ end
 
 initial begin 
 
-    logic [31:0] imem [31:0];
+    logic [31:0] imem [63:0];
     logic [31:0] expected_instruction;
     logic [31:0] test_address;
     $readmemh("test_imemory.hex", imem);
@@ -148,6 +148,15 @@ initial begin
     @(posedge clk)
     #1
     `assert(c0.regfile.registers[22], 32'h00000000)
+
+    // XORI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[18], 32'h21524445)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[19], 32'h21524445)
 
     $dumpflush;
     $finish;
