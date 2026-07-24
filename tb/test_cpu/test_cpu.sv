@@ -158,6 +158,11 @@ initial begin
     #1
     `assert(c0.regfile.registers[19], 32'h21524445)
 
+    // ORI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[20], 32'h2152456F)
+
     $dumpflush;
     $finish;
 end
