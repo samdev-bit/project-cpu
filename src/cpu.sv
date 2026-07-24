@@ -74,7 +74,7 @@ wire alu_src;
 wire [1:0] result_src;
 
 // out
-wire [2:0] alu_control;
+wire [3:0] alu_control;
 wire [2:0] imm_source;
 wire mem_write;
 wire reg_write;
