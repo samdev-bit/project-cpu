@@ -158,6 +158,9 @@ always_comb begin
                 // XOR
                 3'b100 : alu_control = 4'b1000;
 
+                // SLL
+                3'b001 : alu_control = 4'b1001;
+
                 default : alu_control = 4'b111;
             endcase
         end
