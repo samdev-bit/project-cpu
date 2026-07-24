@@ -163,6 +163,19 @@ initial begin
     #1
     `assert(c0.regfile.registers[20], 32'h2152456F)
 
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[20], 32'hFFFFFD6F)
+
+    // ANDI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[15], 32'h00000005)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[15], 32'h21524005)
+
     $dumpflush;
     $finish;
 end
