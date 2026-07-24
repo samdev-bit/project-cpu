@@ -35,3 +35,4 @@ AAA94913 //XORI TEST START :   xori x18 x19 0xAAA  | x18 <= 21524445 (because si
 92F9EA13 //                    ori x20 x19 0x92F   | x20 <= FFFFFD6F
 12F97793 //ANDI TEST START :   andi x15 x18 0x12F  | x15 <= 00000005
 92F97793 //                    andi x15 x18 0x92F  | x15 <= 21524005
+00AA1413 //SLLI TEST START :   slli x8 x20 0x00A   | x8 <= FFF5BC00
