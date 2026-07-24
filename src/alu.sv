@@ -24,14 +24,17 @@ always_comb begin
         // SUB
         4'b0001 : alu_result = src1 + (~src2 + 1'b1);
 
-        // SLTI
+        // SLT
         4'b0101 : alu_result = {31'b0, signed'(src1) < signed'(src2)};
 
-        // SLTIU
+        // SLTU
         4'b0111 : alu_result = {31'b0, unsigned'(src1) < unsigned'(src2)};
 
-        // XORI
+        // XOR
         4'b1000 : alu_result = src1 ^ src2;
+
+        // SLL
+        4'b1001 : alu_result = src1 << src2;
 
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
