@@ -83,6 +83,13 @@ initial begin
         expected = src1 << src2;
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR SRL
+        alu_control = 4'b0110;
+        #1
+        expected = src1 >> src2;
+        #1
+        `assert(alu_result, expected)
     end
 
     // Make sure zero flag works
