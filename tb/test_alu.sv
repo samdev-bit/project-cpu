@@ -90,6 +90,13 @@ initial begin
         expected = src1 >> src2[4:0];
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR SRA
+        alu_control = 4'b1111;
+        #1
+        expected = signed'(src1) >>> src2[4:0];
+        #1
+        `assert(alu_result, expected)
     end
 
     // Make sure zero flag works
