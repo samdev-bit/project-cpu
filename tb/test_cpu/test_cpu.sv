@@ -207,6 +207,11 @@ initial begin
     #1
     `assert(c0.regfile.registers[8], 32'h00000FFF)
 
+    // SUB test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[18], 32'hBD5B4444)
+
     $dumpflush;
     $finish;
 end

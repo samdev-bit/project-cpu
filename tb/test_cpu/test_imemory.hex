@@ -42,5 +42,6 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 40AAD413 //SRAI TEST START :   srai x8 x21 0x00A   | x8 <= FFF7AB62
 40AA5413 //                    srai x8 x20 0x00A   | x8 <= 00000FFF
 608AD413 //                    srai x8 x21 0x008   | SHOULDN'T DO ANYTHING, INCORRECT F7
+412A8933 //SUB TEST START :    sub x18 x21 x18     | x18 <= BD5B4444
 
 
