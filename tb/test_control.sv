@@ -72,6 +72,7 @@ initial begin
     #10
     op = 7'b0110011;
     func3 = 3'b000;
+    func7 = 7'b0000000;
 
     #10
     `assert(alu_control, 4'b0000)
@@ -287,6 +288,20 @@ initial begin
     `assert(result_src, 2'b00)
     `assert(alu_src, 1'b1)
     `assert(PCsrc, 1'b0)
+
+    // TEST FOR SUB
+    #10
+    op = 7'b0110011;
+    func3 = 3'b000;
+    func7 = 7'b0100000;
+
+    #10
+    `assert(alu_control, 4'b0001)
+    `assert(reg_write, 1)
+    `assert(mem_write, 0)
+    `assert(alu_src, 0)
+    `assert(result_src, 2'b00)
+    `assert(PCsrc, 0)
 
     $finish;
 
