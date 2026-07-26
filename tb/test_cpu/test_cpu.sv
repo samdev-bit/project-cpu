@@ -212,6 +212,20 @@ initial begin
     #1
     `assert(c0.regfile.registers[18], 32'hBD5B4444)
 
+    // SLL test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[7], 32'h00000008)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[18], 32'h5B444400)
+
+    // SLT test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[17], 32'h00000001)
+
     $dumpflush;
     $finish;
 end
