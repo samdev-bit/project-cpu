@@ -10,6 +10,9 @@ module alu (
     output logic zero
 );
 
+
+wire [4:0] shamt = src2[4:0];
+
 always_comb begin
     case (alu_control)
         // ADD
@@ -34,10 +37,10 @@ always_comb begin
         4'b1000 : alu_result = src1 ^ src2;
 
         // SLL
-        4'b1001 : alu_result = src1 << src2;
+        4'b1001 : alu_result = src1 << shamt;
 
         // SRL
-        4'b0110 : alu_result = src1 >> src2;
+        4'b0110 : alu_result = src1 >> shamt;
 
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
