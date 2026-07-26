@@ -166,7 +166,7 @@ always_comb begin
                 // SLL
                 3'b001 : alu_control = 4'b1001;
 
-                // SRL
+                // SRL/SRA
                 3'b101 : alu_control = (func7[5] == 1'b0) ? 4'b0110 : 4'b1111;
 
                 default : alu_control = 4'b111;

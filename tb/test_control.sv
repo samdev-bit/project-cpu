@@ -249,7 +249,7 @@ initial begin
     `assert(PCsrc, 1'b0)
 
 
-    // TEST FOR SRLI
+    // TEST FOR SRLI AND SRAIs
     #10
     op = 7'b0010011;
     func3 = 3'b101;
