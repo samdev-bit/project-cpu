@@ -225,6 +225,19 @@ initial begin
     #10
     op = 7'b0010011;
     func3 = 3'b001;
+    func7 = 7'b1001010;
+
+    #10
+    `assert(reg_write, 1'b0)
+    `assert(imm_source, 3'b000)
+    `assert(mem_write, 1'b0)
+    `assert(alu_control, 4'b1001)
+    `assert(result_src, 2'b00)
+    `assert(alu_src, 1'b1)
+    `assert(PCsrc, 1'b0)
+
+    #10
+    func7 = 7'b0000000;
 
     #10
     `assert(reg_write, 1'b1)
@@ -235,16 +248,42 @@ initial begin
     `assert(alu_src, 1'b1)
     `assert(PCsrc, 1'b0)
 
+
     // TEST FOR SRLI
     #10
     op = 7'b0010011;
     func3 = 3'b101;
+    func7 = 7'b1010101;
+
+    #10
+    `assert(reg_write, 1'b0)
+    `assert(imm_source, 3'b000)
+    `assert(mem_write, 1'b0)
+    `assert(alu_control, 4'b0110)
+    `assert(result_src, 2'b00)
+    `assert(alu_src, 1'b1)
+    `assert(PCsrc, 1'b0)
+
+    #10
+    func7 = 7'b0000000;
 
     #10
     `assert(reg_write, 1'b1)
     `assert(imm_source, 3'b000)
     `assert(mem_write, 1'b0)
     `assert(alu_control, 4'b0110)
+    `assert(result_src, 2'b00)
+    `assert(alu_src, 1'b1)
+    `assert(PCsrc, 1'b0)
+    
+    #10
+    func7 = 7'b0100000;
+
+    #10
+    `assert(reg_write, 1'b1)
+    `assert(imm_source, 3'b000)
+    `assert(mem_write, 1'b0)
+    `assert(alu_control, 4'b1111)
     `assert(result_src, 2'b00)
     `assert(alu_src, 1'b1)
     `assert(PCsrc, 1'b0)
