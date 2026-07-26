@@ -80,14 +80,14 @@ initial begin
         // TEST FOR SLL
         alu_control = 4'b1001;
         #1
-        expected = src1 << src2;
+        expected = src1 << src2[4:0];
         #1
         `assert(alu_result, expected)
 
         // TEST FOR SRL
         alu_control = 4'b0110;
         #1
-        expected = src1 >> src2;
+        expected = src1 >> src2[4:0];
         #1
         `assert(alu_result, expected)
     end
