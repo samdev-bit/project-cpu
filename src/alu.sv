@@ -42,6 +42,9 @@ always_comb begin
         // SRL
         4'b0110 : alu_result = src1 >> shamt;
 
+        // SRA
+        4'b1111 : alu_result = signed'(src1) >>> shamt;
+
         // UNIMPLEMENTED STUFF
         default: alu_result = 32'b0;
     endcase
