@@ -89,7 +89,12 @@ always_comb begin
 
         // ALU I-type
         7'b0010011 : begin
-            reg_write = 1'b1;
+
+            // Make sure f7 is well formatted for SLL, SRL and SRA
+            if (func3 == 3'b001) reg_write = (func7 == 7'b0000000) ? 1'b1 : 1'b0;
+            else if (func3 == 3'b101) reg_write = ((func7 == 7'b0000000) | (func7 == 7'b0100000)) ? 1'b1 : 1'b0;
+            else reg_write = 1'b1;
+
             imm_source = 3'b000;
             alu_op = 2'b10;
             alu_src = 1'b1;
@@ -149,10 +154,10 @@ always_comb begin
                 // OR
                 3'b110 : alu_control = 4'b0011;
 
-                // SLTI
+                // SLT
                 3'b010 : alu_control = 4'b0101;
 
-                // SLTIU
+                // SLTU
                 3'b011 : alu_control = 4'b0111;
 
                 // XOR
@@ -162,7 +167,7 @@ always_comb begin
                 3'b001 : alu_control = 4'b1001;
 
                 // SRL
-                3'b101 : alu_control = 4'b0110;
+                3'b101 : alu_control = (func7[5] == 1'b0) ? 4'b0110 : 4'b1111;
 
                 default : alu_control = 4'b111;
             endcase
