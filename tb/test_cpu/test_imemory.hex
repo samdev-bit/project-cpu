@@ -39,3 +39,8 @@ AAA94913 //XORI TEST START :   xori x18 x19 0xAAA  | x18 <= 21524445 (because si
 AAA79413 //                    slli x8 x15 0xAAA   | SHOULDN'T DO ANYTHING, INCORRECT F7
 00A45A13 //SRLI TEST START :   srli x20 x8 0x00A   | x20 <= 003FFD6F
 AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCORRECT F7
+40AAD413 //SRAI TEST START :   srai x8 x21 0x00A   | x8 <= FFF7AB62
+40AA5413 //                    srai x8 x20 0x00A   | x8 <= 00000FFF
+608AD413 //                    srai x8 x21 0x008   | SHOULDN'T DO ANYTHING, INCORRECT F7
+
+

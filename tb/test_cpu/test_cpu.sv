@@ -194,6 +194,19 @@ initial begin
     #1
     `assert(c0.regfile.registers[20], 32'h003FFD6F)
 
+    // SRAI test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[8], 32'hFFF7AB62)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00000FFF)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00000FFF)
+
     $dumpflush;
     $finish;
 end
