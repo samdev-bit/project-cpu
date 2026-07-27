@@ -7,7 +7,8 @@ module alu (
     input logic [31:0] src2,
     // OUT
     output logic [31:0] alu_result,
-    output logic zero
+    output logic zero,
+    output logic alu_lb
 );
 
 
@@ -51,5 +52,6 @@ always_comb begin
 end
 
 assign zero = (alu_result == 32'b0);
+assign alu_lb = alu_result[0];
 
 endmodule
