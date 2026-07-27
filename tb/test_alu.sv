@@ -11,6 +11,7 @@ module test_alu;
     logic [31:0] src2;
     logic [31:0] alu_result;
     logic zero;
+    logic alu_lb;
 
     alu a0 (.*);
 
@@ -97,6 +98,14 @@ initial begin
         expected = signed'(src1) >>> src2[4:0];
         #1
         `assert(alu_result, expected)
+
+        // TEST FOR alu_lb
+        alu_control = 4'b0101;
+        #1
+        expected = {31'b0, signed'(src1) < signed'(src2)};
+        #1
+        `assert(alu_lb, expected[0])
+
     end
 
     // Make sure zero flag works
