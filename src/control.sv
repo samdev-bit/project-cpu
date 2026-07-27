@@ -10,6 +10,7 @@ module control(
     input logic [2:0] func3,
     input logic [6:0] func7,
     input logic alu_zero,
+    input logic alu_lb,
 
     // OUT
     output logic [3:0] alu_control,
@@ -130,8 +131,6 @@ always_comb begin
     endcase
 end
 
-assign PCsrc = (alu_zero & branch) | jump;
-
 // ALU DECODER
 
 always_comb begin
@@ -174,11 +173,38 @@ always_comb begin
         end
 
         // BEQ
-        2'b01 : alu_control = 4'b0001;
+        2'b01 : begin
+            case(func3)
+
+                // BEQ
+                3'b000 : alu_control = 4'b0001;
+
+                // BLT
+                3'b100 : alu_control = 4'b0101;
+
+                default : alu_control = 4'b0000;
+            endcase
+        end
 
         //Everything else
         default : alu_control = 4'b0111;
     endcase
 end
+
+// Branch logic decoder
+
+logic assert_branch;
+
+always_comb begin
+    case(func3)
+        // BEQ
+        3'b000 : assert_branch = alu_zero & branch;
+        // BLT
+        3'b100 : assert_branch = alu_lb & branch;
+        default : assert_branch = 1'b0;
+    endcase
+end
+
+assign PCsrc = assert_branch | jump;
 
 endmodule
