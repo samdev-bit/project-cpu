@@ -14,6 +14,7 @@ module test_control;
     logic [2:0] func3;
     logic [6:0] func7;
     logic alu_zero;
+    logic alu_lb;
 
     logic [3:0] alu_control;
     logic [2:0] imm_source;
@@ -113,6 +114,7 @@ initial begin
     #10
     op = 7'b1100011;
     alu_zero = 1'b0;
+    func3 = 3'b000;
 
     // Test when branch should not be taken
     #10
@@ -302,6 +304,37 @@ initial begin
     `assert(alu_src, 0)
     `assert(result_src, 2'b00)
     `assert(PCsrc, 0)
+
+    // TEST FOR BLT
+    #10
+    op = 7'b1100011;
+    func3 = 3'b100;
+    alu_lb = 1'b0;
+
+    // TEST WHEN BRANCH SHOULDN'T BE TAKEN
+    #10
+    `assert(imm_source, 3'b010)
+    `assert(alu_control, 4'b0101)
+    `assert(mem_write, 1'b0)
+    `assert(reg_write, 1'b0)
+    `assert(alu_src, 1'b0)
+    `assert(PCsrc, 1'b0)
+    `assert(second_add_src, 2'b00)
+
+    // TEST WHEN BRANCH SHOULD BE TAKEN
+    #10
+    alu_lb = 1'b1;
+
+    #10
+    `assert(imm_source, 3'b010)
+    `assert(alu_control, 4'b0101)
+    `assert(mem_write, 1'b0)
+    `assert(reg_write, 1'b0)
+    `assert(alu_src, 1'b0)
+    `assert(PCsrc, 1'b1)
+    `assert(second_add_src, 2'b00)
+
+
 
     $finish;
 
