@@ -226,6 +226,26 @@ initial begin
     #1
     `assert(c0.regfile.registers[17], 32'h00000001)
 
+    // SLTU test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[17], 32'h00000001)
+
+    // XOR test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[17], 32'h7A160045)
+
+    // SRL test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00215244)
+
+    // SRA test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00215244)
+
     $dumpflush;
     $finish;
 end
