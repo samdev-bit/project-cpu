@@ -246,6 +246,18 @@ initial begin
     #1
     `assert(c0.regfile.registers[8], 32'h00215244)
 
+    // BLT test
+    @(posedge clk)
+    
+    @(posedge clk)
+    `assert(c0.instruction, 32'h01144463)
+    #1
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h00000013)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00215244)
+
     $dumpflush;
     $finish;
 end
