@@ -53,6 +53,10 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 0088C463 //BLT TEST START :    blt x17 x8 0x8      | not taken : x8 neg (sign), x17 pos (no sign)
 01144463 //                    blt x8 x17 0x8      | taken : x8 neg (sign), x17 pos (no sign)
 00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
-00000013 // NOP
+00000013 //NOP
+00001663 //BNE TEST START :    bne x0 x0 0x8       | not taken
+01141463 //                    bne x8 x17 0x8      | taken : x8 != x17 (different values)
+00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
+00000013 //NOP
 
 
