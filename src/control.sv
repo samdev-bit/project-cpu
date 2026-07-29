@@ -172,7 +172,7 @@ always_comb begin
             endcase
         end
 
-        // BEQ
+        // B-type
         2'b01 : begin
             case(func3)
 
@@ -181,6 +181,9 @@ always_comb begin
 
                 // BLT
                 3'b100 : alu_control = 4'b0101;
+
+                // BNE
+                3'b001 : alu_control = 4'b0001;
 
                 default : alu_control = 4'b0000;
             endcase
@@ -201,6 +204,8 @@ always_comb begin
         3'b000 : assert_branch = alu_zero & branch;
         // BLT
         3'b100 : assert_branch = alu_lb & branch;
+        // BNE
+        3'b001 : assert_branch = ~alu_zero & branch;
         default : assert_branch = 1'b0;
     endcase
 end
