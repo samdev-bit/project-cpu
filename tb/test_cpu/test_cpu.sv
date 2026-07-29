@@ -272,7 +272,7 @@ initial begin
 
     // BGE test
     @(posedge clk)
-
+    
     @(posedge clk)
     `assert(c0.instruction, 32'h0088D463)
     #1
@@ -281,6 +281,31 @@ initial begin
     `assert(c0.instruction, 32'h00000013)
     #1
     `assert(c0.regfile.registers[8], 32'h00215244)
+
+    // BLTU test
+    @(posedge clk)
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h01146463)
+    #1
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h00000013)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00215244)
+
+    // BGEU test
+    @(posedge clk)
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h0088F463)
+    #1
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h00000013)
+    #1
+    `assert(c0.regfile.registers[8], 32'h00215244)
+
 
     $dumpflush;
     $finish;

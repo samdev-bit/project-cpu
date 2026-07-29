@@ -62,5 +62,13 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 0088D463 //                    bge x17 x8 0x8      | taken : x17 >= x8
 00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
 00000013 //NOP
+0088E463 //BLTU TEST START :   bltu x17 x8 0x8     | not taken : x17 unsigned >= x8 unsigned
+01146463 //                    bltu x8 x17 0x8     | taken : x8 unsigned < x17 unsigned
+00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
+00000013 //NOP
+01147463 //BGEU TEST START :   bgeu x8 x17 0x8     | not taken : x8 unsigned < x17 unsigned
+0088F463 //                    bgeu x17 x8 0x8     | taken : x17 unsigned >= x8 unsigned
+00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
+00000013 //NOP
 
 
