@@ -69,7 +69,6 @@ logic [2:0] f3;
 assign f3 = instruction[14:12];
 logic [6:0] f7;
 assign f7 = instruction[31:25];
-wire alu_zero;
 wire alu_src;
 wire [1:0] result_src;
 
@@ -86,6 +85,7 @@ control control_unit(
     .func3(f3),
     .func7(f7),
     .alu_zero(alu_zero),
+    .alu_lb(alu_lb),
 
     .alu_control(alu_control),
     .imm_source(imm_source),
@@ -154,6 +154,8 @@ signext sign_extender(
 
 wire [31:0] alu_result;
 logic [31:0] alu_src2;
+wire alu_zero;
+wire alu_lb;
 
 always_comb begin : srcBSelect
     if(alu_src == 1)
@@ -167,7 +169,8 @@ alu alu_inst(
     .src1(read_data1),
     .src2(alu_src2),
     .alu_result(alu_result),
-    .zero(alu_zero)
+    .zero(alu_zero),
+    .alu_lb(alu_lb)
 );
 
 // DATA MEMORY
