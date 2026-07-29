@@ -188,6 +188,12 @@ always_comb begin
                 // BGE
                 3'b101 : alu_control = 4'b0101;
 
+                // BLTU
+                3'b110 : alu_control = 4'b0111;
+
+                // BGEU
+                3'b111 : alu_control = 4'b0111;
+
                 default : alu_control = 4'b0000;
             endcase
         end
@@ -205,12 +211,12 @@ always_comb begin
     case(func3)
         // BEQ
         3'b000 : assert_branch = alu_zero & branch;
-        // BLT
-        3'b100 : assert_branch = alu_lb & branch;
+        // BLT, BLTU
+        3'b100, 3'b110 : assert_branch = alu_lb & branch;
         // BNE
         3'b001 : assert_branch = ~alu_zero & branch;
-        // BGE
-        3'b101 : assert_branch = ~alu_lb & branch;
+        // BGE, BGEU
+        3'b101, 3'b111 : assert_branch = ~alu_lb & branch;
         default : assert_branch = 1'b0;
     endcase
 end
