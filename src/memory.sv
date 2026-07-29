@@ -4,7 +4,7 @@
 /* verilator lint_off WIDTHTRUNC */
 
 module memory #(
-    parameter WORDS = 64,
+    parameter WORDS = 128,
     parameter mem_init = ""
 ) (
     input logic clk,

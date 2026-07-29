@@ -10,7 +10,7 @@
 
 module test_memory;
 
-    parameter WORDS = 64;
+    parameter WORDS = 128;
 
     logic clk;
     logic [31:0] address;
