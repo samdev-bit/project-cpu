@@ -185,6 +185,9 @@ always_comb begin
                 // BNE
                 3'b001 : alu_control = 4'b0001;
 
+                // BGE
+                3'b101 : alu_control = 4'b0101;
+
                 default : alu_control = 4'b0000;
             endcase
         end
@@ -206,6 +209,8 @@ always_comb begin
         3'b100 : assert_branch = alu_lb & branch;
         // BNE
         3'b001 : assert_branch = ~alu_zero & branch;
+        // BGE
+        3'b101 : assert_branch = ~alu_lb & branch;
         default : assert_branch = 1'b0;
     endcase
 end

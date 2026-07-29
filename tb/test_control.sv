@@ -363,6 +363,35 @@ initial begin
     `assert(PCsrc, 1'b1)
     `assert(second_add_src, 2'b00)
 
+    // TEST FOR BGE
+    #10
+    op = 7'b1100011;
+    func3 = 3'b101;
+    alu_lb = 1'b1;
+
+    // TEST WHEN BRANCH SHOULDN'T BE TAKEN
+    #10
+    `assert(imm_source, 3'b010)
+    `assert(alu_control, 4'b0101)
+    `assert(mem_write, 1'b0)
+    `assert(reg_write, 1'b0)
+    `assert(alu_src, 1'b0)
+    `assert(PCsrc, 1'b0)
+    `assert(second_add_src, 2'b00)
+
+    // TEST WHEN BRANCH SHOULD BE TAKEN
+    #10
+    alu_lb = 1'b0;
+
+    #10
+    `assert(imm_source, 3'b010)
+    `assert(alu_control, 4'b0101)
+    `assert(mem_write, 1'b0)
+    `assert(reg_write, 1'b0)
+    `assert(alu_src, 1'b0)
+    `assert(PCsrc, 1'b1)
+    `assert(second_add_src, 2'b00)
+
 
 
     $finish;
