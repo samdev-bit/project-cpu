@@ -58,5 +58,9 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 01141463 //                    bne x8 x17 0x8      | taken : x8 != x17 (different values)
 00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
 00000013 //NOP
+01145463 //BGE TEST START :    bge x8 x17 0x8      | not taken : x8 < x17
+0088D463 //                    bge x17 x8 0x8      | taken : x17 >= x8
+00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
+00000013 //NOP
 
 
