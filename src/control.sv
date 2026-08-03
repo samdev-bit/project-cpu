@@ -77,15 +77,21 @@ always_comb begin
             second_add_src = 2'b00;
         end
 
-        // J-type
-        7'b1101111 : begin
+        // J-type, JALR
+        7'b1101111, 7'b1100111 : begin
             reg_write = 1'b1;
-            imm_source = 3'b100;
             mem_write = 1'b0;
             result_src = 2'b10;
             branch = 1'b0;
             jump = 1'b1;
-            second_add_src = 2'b00;
+            if(op[3]) begin
+                imm_source = 3'b100;
+                second_add_src = 2'b00;
+            end
+            else if(~op[3]) begin
+                imm_source = 3'b000;
+                second_add_src = 2'b10;
+            end
         end
 
         // ALU I-type
@@ -101,8 +107,8 @@ always_comb begin
             alu_src = 1'b1;
             mem_write = 1'b0;
             result_src = 2'b00;
-            branch = 0;
-            jump = 0;
+            branch = 1'b0;
+            jump = 1'b0;
         end
 
         // U-type
@@ -111,8 +117,8 @@ always_comb begin
             imm_source = 3'b011;
             mem_write = 1'b0;
             result_src = 2'b11;
-            branch = 0;
-            jump = 0;
+            branch = 1'b0;
+            jump = 1'b0;
             case(op[5])
                 1'b1 : second_add_src = 2'b01;
                 1'b0 : second_add_src = 2'b00;

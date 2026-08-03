@@ -450,6 +450,18 @@ initial begin
     `assert(PCsrc, 1'b1)
     `assert(second_add_src, 2'b00)
 
+    // TEST FOR JALR
+    #10
+    op = 7'b1100111;
+
+    #10
+    `assert(imm_source, 3'b000)
+    `assert(mem_write, 1'b0)
+    `assert(reg_write, 1'b1)
+    `assert(result_src, 2'b10)
+    `assert(PCsrc, 1'b1)
+    `assert(second_add_src, 2'b10)
+
 
 
     $finish;
