@@ -70,5 +70,10 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 0088F463 //                    bgeu x17 x8 0x8     | taken : x17 unsigned >= x8 unsigned
 00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)
 00000013 //NOP
+00000397 //JALR TEST START :   auipc x7 0x0        | x7 <= 00000120                PC = 0x120
+01438393 //                    addi x7 x7 0x14     | x7 <= 00000134                PC = 0x124
+FFC380E7 //                    jalr x1  -4(x7)     | x1 <= 0000012C, go @PC 0x11C  PC = 0x128
+00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)  PC = 0x12C
+00000013 //NOP
 
 

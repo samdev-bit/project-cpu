@@ -306,6 +306,21 @@ initial begin
     #1
     `assert(c0.regfile.registers[8], 32'h00215244)
 
+    // JALR test
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[7], 32'h00000120)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[7], 32'h00000134)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[1], 32'h0000012C)
+
+    @(posedge clk)
+    `assert(c0.instruction, 32'h00000013)
 
     $dumpflush;
     $finish;

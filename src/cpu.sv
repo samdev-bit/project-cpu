@@ -28,6 +28,7 @@ always_comb begin : second_add_select
     case(second_add_src)
         2'b00 : pc_plus_second_add = pc + immediate;
         2'b01 : pc_plus_second_add = immediate;
+        2'b10 : pc_plus_second_add = read_data1 + immediate;
         default : pc_plus_second_add = immediate;
     endcase
 end
