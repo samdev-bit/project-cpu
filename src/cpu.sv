@@ -55,6 +55,7 @@ memory #(
     .address(pc),
     .write_data(32'b0),
     .write_enable(1'b0),
+    .byte_enable(4'b0000),
     .rst_n(1'b1),
 
     // Memory outputs
@@ -174,6 +175,17 @@ alu alu_inst(
     .alu_lb(alu_lb)
 );
 
+// BYTE_ENABLE_DECODER
+
+wire [3:0] byte_enable;
+
+byte_enable_decoder byte_enable_decoder_inst(
+    .func3(3'b000),
+    .alu_result(alu_result),
+    .read_data2(read_data2),
+    .byte_enable(byte_enable)
+);
+
 // DATA MEMORY
 wire [31:0] mem_read;
 
@@ -185,6 +197,7 @@ memory #(
     .address(alu_result),
     .write_data(read_data2),
     .write_enable(mem_write),
+    .byte_enable(byte_enable),
     .rst_n(1'b1),
 
     // Outputs

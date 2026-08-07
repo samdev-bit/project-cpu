@@ -19,11 +19,9 @@ module memory #(
 
 reg [31:0] mem [0:WORDS-1];
 
-/*
 initial begin
     $readmemh(mem_init, mem); // Load memory for simulation
 end
-*/
 
 always @(posedge clk) begin
     // reset logic
