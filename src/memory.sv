@@ -10,6 +10,7 @@ module memory #(
     input logic clk,
     input logic [31:0] address,
     input logic [31:0] write_data,
+    input logic [3:0] byte_enable,
     input logic write_enable,
     input logic rst_n,
 
@@ -18,9 +19,11 @@ module memory #(
 
 reg [31:0] mem [0:WORDS-1];
 
+/*
 initial begin
     $readmemh(mem_init, mem); // Load memory for simulation
 end
+*/
 
 always @(posedge clk) begin
     // reset logic
@@ -31,9 +34,14 @@ always @(posedge clk) begin
     end
     else if (write_enable) begin
         // Ensure address is aligned, if not ignore the write
-        if (address[1:0] == 2'b00) begin
-            mem[address[31:2]] <= write_data;
-        end 
+        if (address[1:0] != 2'b00) $display("Misaligned write at address %h", address);
+        else begin   
+            for(int i = 0; i < 4; i++) begin
+                if (byte_enable[i]) begin
+                    mem[address[31:2]][(i*8)+:8] <= write_data[(i*8)+:8];
+                end
+            end
+        end
     end
 end
 
