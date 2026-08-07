@@ -2,11 +2,12 @@
 
 `define assert(signal, value) \
     if ((signal) !== (value)) begin \
-        $display("ASSERTION FAILED in %m: signal (%h) != value (%h)", (signal), (value)); \
-        $finish; \
+        $error("ASSERTION FAILED in %m: signal (%h) != value (%h) in file %s at line %0d", (signal), (value), (`__FILE__), (`__LINE__)); \
     end
 
 /* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_off WIDTHTRUNC */
+/* verilator lint_off WIDTHEXPAND */
 
 module test_memory;
 
@@ -15,6 +16,7 @@ module test_memory;
     logic clk;
     logic [31:0] address;
     logic [31:0] write_data;
+    logic [3:0] byte_enable;
     logic write_enable;
     logic rst_n;
     logic [31:0] read_data;
@@ -28,6 +30,8 @@ end
 
     logic [31:0] test_data [3:0] = '{32'hDEADBEEF, 32'hCAFEBABE, 32'h12345678, 32'hA5A5A5A5};
     logic [31:0] expected_value;
+    logic [31:0] mask;
+    logic [3:0] test;
 
 initial begin
     clk = 0;
@@ -43,6 +47,7 @@ initial begin
     write_enable = 0;
     address = 0;
     write_data = 0;
+    byte_enable = 4'b0000;
 
     #10ns rst_n = 1;
 
@@ -56,6 +61,7 @@ initial begin
     for (int i = 0; i < 4; i++) begin
         
         write_enable = 1;
+        byte_enable = 4'b1111;
         address = i*4;
         write_data = test_data[i];
         @(posedge clk);
@@ -71,6 +77,7 @@ initial begin
         address = i;
         write_data = i + 100;
         write_enable = 1;
+        byte_enable = 4'b1111;
         @(posedge clk);
        
         @(negedge clk);
@@ -82,6 +89,35 @@ initial begin
         expected_value = i + 100;
 
         #1ns `assert(read_data, expected_value)
+    end
+
+    #10
+    rst_n = 0;
+    #10
+    rst_n = 1;
+
+    // Testing byte enable
+    for(int i = 0; i < 16; i++) begin
+        
+        byte_enable = 4'(i);
+        mask = 32'b0;
+        for(int j = 0; j < 4; j++) begin
+            test = (byte_enable >> j) & 1;
+            if (test[0]) mask = mask | (32'hFF << (8*j));
+        end
+        
+        for(int k = 0; k < 4; k++) begin
+            @(posedge clk)
+            write_enable = 1;
+            write_data = test_data[k];
+            address = i*4;
+
+            @(posedge clk)
+            write_enable = 0;
+
+            @(posedge clk)
+            `assert(read_data, (write_data & mask))
+        end
     end
 
     $finish;
