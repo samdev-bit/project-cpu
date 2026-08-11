@@ -322,6 +322,14 @@ initial begin
     @(posedge clk)
     `assert(c0.instruction, 32'h00000013)
 
+    @(posedge clk)
+    #1
+    `assert(c0.data_memory.mem[0], 32'hAEAEAEAE)
+
+    @(posedge clk)
+    #1
+    `assert(c0.data_memory.mem[1], 32'h00210000)
+
     $dumpflush;
     $finish;
 end

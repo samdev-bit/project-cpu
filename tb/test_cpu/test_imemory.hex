@@ -75,5 +75,7 @@ AAAA5913 //                    srli x20 x18 0xAAA  | SHOULDN'T DO ANYTHING, INCO
 FFC380E7 //                    jalr x1  -4(x7)     | x1 <= 0000012C, go @PC 0x11C  PC = 0x128
 00C00413 //                    addi x8 x0 0xC      | NEVER EXECUTED (check value)  PC = 0x12C
 00000013 //NOP
+008020A3 //SB TEST START :     sw x8 0x1(x0)       | NO WRITE ! (mis-aligned !)    PC = 0x11C
+00800323 //                    sb x8 0x6(x0)       | mem @ 0x4 <= 00210000         PC = 0x120
 
 
