@@ -178,14 +178,14 @@ alu alu_inst(
 // BYTE_ENABLE_DECODER
 
 wire [3:0] byte_enable;
-wire [31:0] write_data;
+wire [31:0] mem_write_data;
 
 byte_enable_decoder byte_enable_decoder_inst(
     .func3(f3),
     .alu_result(alu_result),
     .read_data2(read_data2),
     .byte_enable(byte_enable),
-    .write_data(write_data)
+    .write_data(mem_write_data)
 );
 
 // DATA MEMORY
@@ -197,7 +197,7 @@ memory #(
     // Inputs
     .clk(clk),
     .address({alu_result[31:2], 2'b00}),
-    .write_data(write_data),
+    .write_data(mem_write_data),
     .write_enable(mem_write),
     .byte_enable(byte_enable),
     .rst_n(1'b1),
