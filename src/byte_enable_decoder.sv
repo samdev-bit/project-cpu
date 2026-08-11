@@ -34,6 +34,19 @@ always_comb begin
                 end
             endcase
         end
+        3'b001 : begin // SH
+            case(offset)
+                2'b00 : begin 
+                    byte_enable = 4'b0011;
+                    write_data = read_data2 & 32'h0000FFFF;
+                end
+                2'b10 : begin 
+                    byte_enable = 4'b1100;
+                    write_data = read_data2 & 32'hFFFF0000;
+                end
+                default: byte_enable = 4'b0000;
+            endcase
+        end
         3'b010 : begin // SW
             byte_enable = (offset == 2'b00) ? 4'b1111 : 4'b0000;
             write_data = read_data2;
