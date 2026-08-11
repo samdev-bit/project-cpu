@@ -330,6 +330,18 @@ initial begin
     #1
     `assert(c0.data_memory.mem[1], 32'h00210000)
 
+    @(posedge clk)
+    #1
+    `assert(c0.data_memory.mem[0], 32'hAEAEAEAE)
+
+    @(posedge clk)
+    #1
+    `assert(c0.data_memory.mem[0], 32'hAEAEAEAE)
+
+    @(posedge clk)
+    #1
+    `assert(c0.data_memory.mem[1], 32'h5B440000)
+
     $dumpflush;
     $finish;
 end
