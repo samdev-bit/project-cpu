@@ -66,6 +66,28 @@ initial begin
             end
         end
     end
+
+    // SH
+    #10
+
+    func3 = 3'b001;
+
+    for(int i = 0; i < 100; i++) begin
+        read_data2 = $urandom();
+        for(int j = 0; j < 4; j++) begin
+            alu_result = word | j;
+            #1
+            if(b0.offset == 2'b00) begin
+                `assert(byte_enable, 4'b0011)
+                `assert(write_data, (read_data2 & 32'h0000FFFF))
+            end
+            else if(b0.offset == 2'b10) begin
+                `assert(byte_enable, 4'b1100)
+                `assert(write_data, (read_data2 & 32'hFFFF0000))
+            end
+            else begin `assert(byte_enable, 4'b0000) end
+        end
+    end
 end
 
 endmodule
