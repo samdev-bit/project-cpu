@@ -1,3 +1,4 @@
+import holy_core_pkg::*;
 `timescale 1ns / 1ps
 
 /* verilator lint_off UNDRIVEN */
@@ -32,11 +33,11 @@ logic jump;
 always_comb begin
     case(op)
         // LW
-        7'b0000011 : begin
+        OPCODE_I_TYPE_LOAD : begin
             reg_write = 1'b1;
-            imm_source = 3'b000;
+            imm_source = I_TYPE_IMM;
             mem_write = 1'b0;
-            alu_op = 2'b00;
+            alu_op = ALU_OP_LOAD_STORE;
             alu_src = 1'b1; // imm read
             result_src = 2'b01; // memory read
             branch = 1'b0;
@@ -44,21 +45,21 @@ always_comb begin
         end
 
         //SW
-        7'b0100011 : begin
+        OPCODE_S_TYPE : begin
             reg_write = 1'b0;
-            imm_source = 3'b001;
+            imm_source = S_TYPE_IMM;
             mem_write = 1'b1;
-            alu_op = 2'b00;
+            alu_op = ALU_OP_LOAD_STORE;
             alu_src = 1'b1; //imm read
             branch = 1'b0; 
             jump = 1'b0;
         end
 
         // R-type
-        7'b0110011 : begin
+        OPCODE_R_TYPE : begin
             reg_write = 1'b1;
             mem_write = 1'b0;
-            alu_op = 2'b10;
+            alu_op = ALU_OP_MATH;
             alu_src = 1'b0; // register read
             result_src = 2'b00; // alu read
             branch = 1'b0;
@@ -66,11 +67,11 @@ always_comb begin
         end
 
         // B-type
-        7'b1100011 : begin
+        OPCODE_B_TYPE : begin
             reg_write = 1'b0;
-            imm_source = 3'b010;
+            imm_source = B_TYPE_IMM;
             mem_write = 1'b0;
-            alu_op = 2'b01;
+            alu_op = ALU_OP_BRANCHES;
             alu_src = 1'b0; // register read
             branch = 1'b1;
             jump = 1'b0;
@@ -78,32 +79,32 @@ always_comb begin
         end
 
         // J-type, JALR
-        7'b1101111, 7'b1100111 : begin
+        OPCODE_J_TYPE, OPCODE_J_TYPE_JALR : begin
             reg_write = 1'b1;
             mem_write = 1'b0;
             result_src = 2'b10;
             branch = 1'b0;
             jump = 1'b1;
             if(op[3]) begin
-                imm_source = 3'b100;
+                imm_source = J_TYPE_IMM;
                 second_add_src = 2'b00;
             end
             else if(~op[3]) begin
-                imm_source = 3'b000;
+                imm_source = I_TYPE_IMM;
                 second_add_src = 2'b10;
             end
         end
 
         // ALU I-type
-        7'b0010011 : begin
+        OPCODE_I_TYPE_ALU  : begin
 
             // Make sure f7 is well formatted for SLL, SRL and SRA
-            if (func3 == 3'b001) reg_write = (func7 == 7'b0000000) ? 1'b1 : 1'b0;
-            else if (func3 == 3'b101) reg_write = ((func7 == 7'b0000000) | (func7 == 7'b0100000)) ? 1'b1 : 1'b0;
+            if (func3 == F3_SLL) reg_write = (func7 == F7_SLL_SRL) ? 1'b1 : 1'b0;
+            else if (func3 == F3_SRL_SRA) reg_write = ((func7 == F7_SLL_SRL) | (func7 == F7_SRA)) ? 1'b1 : 1'b0;
             else reg_write = 1'b1;
 
-            imm_source = 3'b000;
-            alu_op = 2'b10;
+            imm_source = I_TYPE_IMM;
+            alu_op = ALU_OP_MATH;
             alu_src = 1'b1;
             mem_write = 1'b0;
             result_src = 2'b00;
@@ -112,9 +113,9 @@ always_comb begin
         end
 
         // U-type
-        7'b0110111, 7'b0010111: begin
+        OPCODE_U_TYPE_LUI, OPCODE_U_TYPE_AUIPC: begin
             reg_write = 1'b1;
-            imm_source = 3'b011;
+            imm_source = U_TYPE_IMM;
             mem_write = 1'b0;
             result_src = 2'b11;
             branch = 1'b0;
@@ -142,63 +143,63 @@ end
 always_comb begin
     case(alu_op)
         // LW, SW
-        2'b00 : alu_control = 4'b0000;
+        ALU_OP_LOAD_STORE : alu_control = ALU_ADD;
 
         // R-type and ALU I-type
-        2'b10 : begin 
+        ALU_OP_MATH : begin 
             case(func3)
                 // ADD
-                3'b000 : if((func7[5] == 1'b0) | op == 7'b0010011) 
-                            alu_control = 4'b0000;
+                F3_ADD_SUB : if((func7[5] == 1'b0) | op == 7'b0010011) 
+                            alu_control = ALU_ADD;
                          else 
-                            alu_control = 4'b0001;
+                            alu_control = ALU_SUB;
                 
                 // AND
-                3'b111 : alu_control = 4'b0010;
+                F3_AND : alu_control = ALU_AND;
 
                 // OR
-                3'b110 : alu_control = 4'b0011;
+                F3_OR : alu_control = ALU_OR;
 
                 // SLT
-                3'b010 : alu_control = 4'b0101;
+                F3_SLT : alu_control = ALU_SLT;
 
                 // SLTU
-                3'b011 : alu_control = 4'b0111;
+                F3_SLTU : alu_control = ALU_SLTU;
 
                 // XOR
-                3'b100 : alu_control = 4'b1000;
+                F3_XOR : alu_control = ALU_XOR;
 
                 // SLL
-                3'b001 : alu_control = 4'b1001;
+                F3_SLL : alu_control = ALU_SLL;
 
                 // SRL/SRA
-                3'b101 : alu_control = (func7[5] == 1'b0) ? 4'b0110 : 4'b1111;
+                F3_SRL_SRA : alu_control = (func7[5] == 1'b0) ? ALU_SRL : ALU_SRA;
 
                 default : alu_control = 4'b111;
             endcase
         end
 
         // B-type
-        2'b01 : begin
+        ALU_OP_BRANCHES : begin
             case(func3)
 
                 // BEQ
-                3'b000 : alu_control = 4'b0001;
+                F3_BEQ : alu_control = ALU_SUB;
 
                 // BLT
-                3'b100 : alu_control = 4'b0101;
+                F3_BLT : alu_control = ALU_SLT;
 
                 // BNE
-                3'b001 : alu_control = 4'b0001;
+                F3_BNE : alu_control = ALU_SUB;
 
                 // BGE
-                3'b101 : alu_control = 4'b0101;
+                F3_BGE : alu_control = ALU_SLT;
 
                 // BLTU
-                3'b110 : alu_control = 4'b0111;
+                F3_BLTU : alu_control = ALU_SLTU;
 
                 // BGEU
-                3'b111 : alu_control = 4'b0111;
+                F3_BGEU : alu_control = ALU_SLTU;
 
                 default : alu_control = 4'b0000;
             endcase
@@ -216,13 +217,13 @@ logic assert_branch;
 always_comb begin
     case(func3)
         // BEQ
-        3'b000 : assert_branch = alu_zero & branch;
+        F3_BEQ : assert_branch = alu_zero & branch;
         // BLT, BLTU
-        3'b100, 3'b110 : assert_branch = alu_lb & branch;
+        F3_BLT, F3_BLTU : assert_branch = alu_lb & branch;
         // BNE
-        3'b001 : assert_branch = ~alu_zero & branch;
+        F3_BNE : assert_branch = ~alu_zero & branch;
         // BGE, BGEU
-        3'b101, 3'b111 : assert_branch = ~alu_lb & branch;
+        F3_BGE, F3_BGEU : assert_branch = ~alu_lb & branch;
         default : assert_branch = 1'b0;
     endcase
 end

@@ -1,3 +1,4 @@
+import holy_core_pkg::*;
 `timescale 1ns / 1ps
 
 module byte_enable_decoder (
@@ -14,7 +15,7 @@ assign offset = alu_result[1:0];
 
 always_comb begin
     case(func3)
-        3'b000 : begin // SB
+        F3_BYTE, F3_BYTE_U : begin // SB, LB, LBU
             case(offset)
                 2'b00 : begin 
                     byte_enable = 4'b0001;
@@ -34,7 +35,7 @@ always_comb begin
                 end
             endcase
         end
-        3'b001 : begin // SH
+        F3_HALFWORD, F3_HALFWORD_U : begin // SH, LH, LHU
             case(offset)
                 2'b00 : begin 
                     byte_enable = 4'b0011;
@@ -47,7 +48,7 @@ always_comb begin
                 default: byte_enable = 4'b0000;
             endcase
         end
-        3'b010 : begin // SW
+        F3_WORD : begin // SW
             byte_enable = (offset == 2'b00) ? 4'b1111 : 4'b0000;
             write_data = read_data2;
         end
