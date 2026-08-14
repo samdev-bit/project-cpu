@@ -112,12 +112,25 @@ wire [31:0] read_data1;
 wire [31:0] read_data2;
 
 logic [31:0] write_data;
+logic wb_valid;
 always_comb begin : wbSelect
     case (result_src)
-        2'b00 : write_data = alu_result;
-        2'b01 : write_data = mem_read;
-        2'b10 : write_data = PCPlus4;
-        2'b11 : write_data = pc_plus_second_add;
+        2'b00 : begin 
+                    write_data = alu_result;
+                    wb_valid = 1'b1;
+                end
+        2'b01 : begin
+                    write_data = masked_wb;
+                    wb_valid = valid;
+                end
+        2'b10 : begin
+                    write_data = PCPlus4;
+                    wb_valid = 1'b1;
+                end 
+        2'b11 : begin
+                    write_data = pc_plus_second_add;
+                    wb_valid = 1'b1;
+                end
         default : write_data = mem_read;
     endcase
 end
@@ -135,7 +148,7 @@ regfile regfile(
     .read_data2(read_data2),
 
     // Write In
-    .write_enable(reg_write),
+    .write_enable(reg_write & wb_valid),
     .write_data(write_data),
     .write_address(write_address)
 );
@@ -204,6 +217,18 @@ memory #(
 
     // Outputs
     .read_data(mem_read)
+);
+
+wire [31:0] masked_wb;
+wire valid;
+
+reader reader_inst (
+    .mem_read(mem_read),
+    .func3(f3),
+    .byte_enable(byte_enable),
+
+    .wb_data(masked_wb),
+    .valid(valid)
 );
 
 endmodule
