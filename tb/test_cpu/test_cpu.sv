@@ -341,6 +341,43 @@ initial begin
     @(posedge clk)
     #1
     `assert(c0.data_memory.mem[1], 32'h5B440000)
+    c0.regfile.registers[7] = 32'h00000000;
+    c0.regfile.registers[18] = 32'h00000000;
+    c0.regfile.registers[20] = 32'h00000000;
+    c0.regfile.registers[21] = 32'h00000000;
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[7], 32'h00000010)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[18], 32'h00000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[18], 32'hFFFFFFDE)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[19], 32'h000000BE)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[20], 32'h00000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[20], 32'hFFFFDEAD)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[21], 32'h00000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[21], 32'h0000DEAD)
+    
 
     $dumpflush;
     $finish;
