@@ -32,7 +32,7 @@ always @(posedge clk) begin
     end
     else if (write_enable) begin
         // Ensure address is aligned, if not ignore the write
-        if (address[1:0] != 2'b00) $display("Misaligned write at address %h", address);
+        if (address[1:0] != 2'b00);
         else begin   
             for(int i = 0; i < 4; i++) begin
                 if (byte_enable[i]) begin
