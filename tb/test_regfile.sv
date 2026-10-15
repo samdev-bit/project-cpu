@@ -38,6 +38,13 @@ logic [31:0] theoretical_regs [0:31];
 
 initial begin
 
+    // Check for x0
+    read_address1 = 0;
+    read_address2 = 0;
+
+    `assert(read_data1, 32'b0)
+    `assert(read_data2, 32'b0)
+
     // Initialize
     rst_n = 0;
     write_enable = 0;
