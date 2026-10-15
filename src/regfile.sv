@@ -36,8 +36,8 @@ end
 
 // Read logic
 always_comb begin : readLogic 
-    read_data1 = registers[read_address1];
-    read_data2 = registers[read_address2];
+    read_data1 = (read_address1 == 5'b0) ? 32'b0 : registers[read_address1];
+    read_data2 = (read_address2 == 5'b0) ? 32'b0 : registers[read_address2];
 end
 
 endmodule
