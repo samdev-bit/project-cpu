@@ -14,6 +14,9 @@ logic [1:0] offset;
 assign offset = alu_result[1:0];
 
 always_comb begin
+    byte_enable = 4'b0000;
+    write_data = 32'h00000000;
+    
     case(func3)
         F3_BYTE, F3_BYTE_U : begin // SB, LB, LBU
             case(offset)

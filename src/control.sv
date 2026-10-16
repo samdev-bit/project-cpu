@@ -31,6 +31,17 @@ logic branch;
 logic jump;
 
 always_comb begin
+
+    reg_write      = 1'b0;
+    imm_source     = 3'b000;
+    mem_write      = 1'b0;
+    alu_op         = 2'b00;
+    alu_src        = 1'b0;
+    result_src     = 2'b00;
+    branch         = 1'b0;
+    jump           = 1'b0;
+    second_add_src = 2'b00;
+    
     case(op)
         // LW
         OPCODE_I_TYPE_LOAD : begin
