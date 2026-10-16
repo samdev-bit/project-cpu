@@ -8,6 +8,8 @@ https://github.com/user-attachments/assets/1401f442-7806-424b-8f02-0850f95cc8b2
 
 ## Branches
 
+| Branch | What it contains |
+|---|---|
 | 'single-cycle-edition' | My CPU that works in simulation: 8 modules + a self-checking testbench for each module + system level tests |
 | 'fpga-edition' | The same CPU plus memory-mapped I/O (LED peripheral), top-level wrapper, clocking, and constraints for the RealDigital Blackboard |
 
