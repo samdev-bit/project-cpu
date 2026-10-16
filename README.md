@@ -4,7 +4,7 @@ A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with
 
 CPU running on the Real Digital Blackboard lighting up 10 LEDs:
 
-https://github.com/user-attachments/assets/1401f442-7806-424b-8f02-0850f95cc8b2
+https://github.com/user-attachments/assets/1548b4cf-4b66-4f95-8433-e3351aa90bea
 
 ## Branches
 
