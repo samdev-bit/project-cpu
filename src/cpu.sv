@@ -6,6 +6,7 @@
 module cpu (
     input logic clk,
     input logic rst_n,
+    input logic [9:0] sw,
 
     output logic [9:0] led
 );
@@ -206,16 +207,19 @@ alu alu_inst(
 
 logic led_enable;
 logic mem_enable;
-logic led_sel;
+logic sw_enable;
+logic [1:0] w_sel;
 
-// LED_DECODER
+// IO_DECODER
 mmio mmio_inst(
+    .reg_write(reg_write),
     .mem_write(mem_write),
     .alu_result(alu_result),
 
     .led_enable(led_enable),
     .mem_enable(mem_enable),
-    .led_sel(led_sel)
+    .sw_enable(sw_enable),
+    .w_sel(w_sel)
 );
 
 // BYTE_ENABLE_DECODER
@@ -234,6 +238,7 @@ byte_enable_decoder byte_enable_decoder_inst(
 // PERIPHERALS MODULE
 
 logic [31:0] led_read_data;
+logic [31:0] sw_read_data;
 
 peripherals peripherals_inst(
     .clk(clk),
@@ -241,9 +246,11 @@ peripherals peripherals_inst(
     .led_enable(led_enable),
     .byte_enable(byte_enable),
     .write_data(mem_led_write_data),
+    .sw_in(sw),
 
     .led_output(led),
-    .led_read_data(led_read_data)
+    .led_read_data(led_read_data),
+    .sw_read_data(sw_read_data)
 );
 
 // DATA MEMORY
@@ -267,8 +274,12 @@ memory #(
 logic [31:0] read_data;
 
 always_comb begin : write_back_data_select
-    if(led_sel) read_data = led_read_data;
-    else read_data = mem_read;
+    case(w_sel)
+        2'b11 : read_data = led_read_data;
+        2'b10 : read_data = mem_read;
+        2'b00 : read_data = sw_read_data;
+        default : read_data = mem_read;
+    endcase
 end
 
 reader reader_inst (
