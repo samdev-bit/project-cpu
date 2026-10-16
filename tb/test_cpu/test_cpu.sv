@@ -12,6 +12,7 @@
 module test_cpu;
     logic clk;
     logic rst_n;
+    logic [9:0] sw;
 
     logic [9:0] led;
 
@@ -442,6 +443,21 @@ initial begin
         #1;
         `assert(c0.pc, (i < 5) ? 32'h180 : 32'h19C)
     end
+
+    sw = 10'b0101010101;
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[1], 32'h10000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[2], 32'h00000155)
+
+    @(posedge clk)
+    #1
+    `assert(led, 10'b0101010101)
+
 
     $dumpflush;
     $finish;
