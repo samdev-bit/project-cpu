@@ -49,7 +49,9 @@ No ECALL/EBREAK
 
 Single-Cycle, so clock is limited by longest path
 
-Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM and LED addresses)
+Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM/Instruction memory and LED addresses)
+
+LED register is read/write; hardware demo currently exercises writes, read-back not yet tested on the board.
 
 ## Author 
 Samuel Devotta, University of Southampton
