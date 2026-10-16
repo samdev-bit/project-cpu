@@ -88,36 +88,36 @@ FFD39A03 //LH TEST START :     lh x20 -3(x7)       | NO WRITE IN REGISTER !
 FFA39A03 //                    lh x20 -6(x7)       | x20 <= FFFFDEAD
 FFD3DA83 //LHU TEST START :    lhu x21 -3(x7)      | NO WRITE IN REGISTER !
 FFA3DA83 //                    lhu x21 -6(x7)      | x21 <= 0000DEAD
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
+100000B7 //LED TEST START :    lui x1, 65536       | x1 <= 10000000
+00100113 //                    addi x2, x0, 1      | x2 <= 00000001
+0020A023 //                    sw x2, 0(x1)        | led <= 10'b0000000001
+100000B7 //LED BLINK TEST :    lui x1, 65536       | x1 <= 10000000
+00100113 //                    addi x2, x0, 1      | x2 <= 00000001
+00600213 //                    addi x4, x0, 6      | x4 <= 00000006
+0020A023 //                    sw x2, 0(x1)        | led blink
+005F61B7 //                    lui x3, 1526        | x3<= 005F6000
+E1018193 //                    addi x3, x3, -496   | x3 <= 005F5E10
+FFF18193 //                    addi x3, x3, -1     | x3 decrement
+FE019EE3 //                    bne x3, x0, -4      | taken until x3 is 0
+00114113 //                    xori x2, x2, 1      | x2 <= 00000000
+FFF20213 //                    addi x4, x4, -1     | x4 <= 00000005
+FE0212E3 //                    bne x4, x0, -28     | taken until x4 is 0     
+00600213 //                    addi x4, x0, 6      | x4 <= 00000006
+15500113 //                    addi x2, x0, 341    | x2 <= 00000155
+005F61B7 //                    lui x3, 1526        | x3 <= 005F6000
+E1018193 //                    addi x3, x3, -496   | x3 <= 005F5E10
+FFF18193 //                    addi x3, x3, -1     | x3 decrement
+FE019EE3 //                    bne x3, x0, -4      | taken until x3 is 0
+0020A023 //                    sw x2, 0(x1)        | led <= 0101010101
+2AA00113 //                    addi x2, x0, 682    | x2 <= 000002AA
+005F61B7 //                    lui x3, 1526        | x3 <= 005F6000
+E1018193 //                    addi x3, x3, -496   | x3 <= 005F5E10
+FFF18193 //                    addi x3, x3, -1     | x3 decrement
+FE019EE3 //                    bne x3, x0, -4      | taken until x3 is 0
+0020A023 //                    sw x2, 0(x1)        | led <= 1010101010
+FFF20213 //                    addi x4, x4, -1     | x4 <= 00000005
+FC0216E3 //                    bne x4, x0, -52     | taken until x4 is 0  
+0000006F //                    end of program
 00000013
 00000013
 00000013
