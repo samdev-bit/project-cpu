@@ -44,7 +44,9 @@ fpga-edition : Contains additional modules (with their respective testbenches) a
 ## Limitations
 
 No ECALL/EBREAK
+
 Single-Cycle, so clock is limited by longest path
+
 Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM and LED addresses)
 
 ## Author 
