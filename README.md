@@ -3,6 +3,7 @@
 A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with self-checking testbenches and deployed on a Xilinx Zynq-7000 FPGA.
 
 CPU running on the Real Digital Blackboard lighting up 10 LEDs:
+
 https://github.com/user-attachments/assets/7f6dae86-bdb9-423c-918d-5688394dd424
 
 ## Branches
