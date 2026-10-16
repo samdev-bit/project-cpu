@@ -6,9 +6,11 @@ module peripherals (
     input logic led_enable,
     input logic [3:0] byte_enable,
     input logic [31:0] write_data,
+    input logic [9:0] sw_in,
 
     output logic [9:0] led_output,
-    output logic [31:0] led_read_data
+    output logic [31:0] led_read_data,
+    output logic [31:0] sw_read_data
 );
 
 always @(posedge clk) begin
@@ -29,6 +31,7 @@ end
 
 always_comb begin
     led_read_data = {22'b0, led_output[9:0]};
+    sw_read_data = {22'b0, sw_in[9:0]};
 end
 
 endmodule
