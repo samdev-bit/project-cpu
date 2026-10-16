@@ -13,6 +13,8 @@ module test_cpu;
     logic clk;
     logic rst_n;
 
+    logic [9:0] led;
+
     cpu c0 (.*);
 
 initial begin
@@ -378,6 +380,68 @@ initial begin
     #1
     `assert(c0.regfile.registers[21], 32'h0000DEAD)
     
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[1], 32'h10000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[2], 32'h00000001)
+
+    @(posedge clk)
+    #1
+    `assert(led, 10'b0000000001)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[1], 32'h10000000)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[2], 32'h00000001)
+
+    @(posedge clk)
+    #1
+    `assert(c0.regfile.registers[4], 32'h00000006)
+
+    for (int i = 0; i < 6; i++) begin
+        // sw x2, 0(x1)
+        @(posedge clk); 
+        #1;
+        `assert(led, (i % 2 == 0) ? 10'b1 : 10'b0)
+
+        // addi x3, x0, 5
+        @(posedge clk); 
+        #1;
+        `assert(c0.regfile.registers[3], 32'd5)
+
+        for (int k = 1; k <= 5; k++) begin
+            // addi x3, x3, -1
+            @(posedge clk); 
+            #1;
+            `assert(c0.regfile.registers[3], 5 - k)
+
+            // bne x3, x0, -4
+            @(posedge clk); 
+            #1;
+            `assert(c0.pc, (k < 5) ? 32'h188 : 32'h190)
+        end
+
+        // xori x2, x2
+        @(posedge clk); 
+        #1;
+        `assert(c0.regfile.registers[2], (i % 2 == 0) ? 32'd0 : 32'd1)
+
+        // addi x4, x4
+        @(posedge clk); 
+        #1;
+        `assert(c0.regfile.registers[4], 5 - i)
+
+        // bne x4, x0
+        @(posedge clk); 
+        #1;
+        `assert(c0.pc, (i < 5) ? 32'h180 : 32'h19C)
+    end
 
     $dumpflush;
     $finish;

@@ -88,19 +88,19 @@ FFD39A03 //LH TEST START :     lh x20 -3(x7)       | NO WRITE IN REGISTER !
 FFA39A03 //                    lh x20 -6(x7)       | x20 <= FFFFDEAD
 FFD3DA83 //LHU TEST START :    lhu x21 -3(x7)      | NO WRITE IN REGISTER !
 FFA3DA83 //                    lhu x21 -6(x7)      | x21 <= 0000DEAD
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
-00000013
+100000B7 //LED TEST START :    lui x1, 65536       | x1 <= 10000000
+00100113 //                    addi x2, x0, 1      | x2 <= 00000001
+0020A023 //                    sw x2, 0(x1)        | led <= 10'b0000000001
+100000B7 //LED BLINK TEST :    lui x1, 65536       | x1 <= 10000000
+00100113 //                    addi x2, x0, 1      | x2 <= 00000001
+00600213 //                    addi x4, x0, 6      | x4 <= 00000006
+0020A023 //                    sw x2, 0(x1)        | led <= 10'b0000000001
+00500193 //                    addi x3, x0, 5      | x3 <= 00000005
+FFF18193 //                    addi x3, x3, -1     | x3 <= 00000004
+FE019EE3 //                    bne x3, x0, -4      | taken until x3 is 0
+00114113 //                    xori x2, x2, 1      | x2 <= 00000000
+FFF20213 //                    addi x4, x4, -1     | x4 <= 00000005
+FE0214E3 //                    bne x4, x0, -24     | taken until x4 is 0     
 00000013
 00000013
 00000013
