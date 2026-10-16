@@ -5,8 +5,27 @@
 
 module cpu (
     input logic clk,
-    input logic rst_n
+    input logic rst_n,
+
+    output logic [9:0] led
 );
+
+// CONTROL OUTPUT
+wire PCsrc;
+wire [1:0] second_add_src;
+
+// SIGNEXT OUTPUT
+wire[31:0] immediate;
+
+// REGFILE OUTPUT
+wire [31:0] read_data1;
+
+// ALU OUTPUT
+wire [31:0] alu_result;
+
+// READER OUTPUT
+wire [31:0] masked_wb;
+wire valid;
 
 // PROGRAM COUNTER
 
@@ -79,8 +98,6 @@ wire [3:0] alu_control;
 wire [2:0] imm_source;
 wire mem_write;
 wire reg_write;
-wire PCsrc;
-wire [1:0] second_add_src;
 
 control control_unit(
     .op(op),
@@ -108,12 +125,14 @@ logic [4:0] read_address2;
 assign read_address2 = instruction[24:20];
 logic [4:0] write_address;
 assign write_address = instruction[11:7];
-wire [31:0] read_data1;
 wire [31:0] read_data2;
 
 logic [31:0] write_data;
 logic wb_valid;
 always_comb begin : wbSelect
+    write_data = alu_result;
+    wb_valid = 1'b1;
+
     case (result_src)
         2'b00 : begin 
                     write_data = alu_result;
@@ -131,7 +150,6 @@ always_comb begin : wbSelect
                     write_data = pc_plus_second_add;
                     wb_valid = 1'b1;
                 end
-        default : write_data = mem_read;
     endcase
 end
 
@@ -157,7 +175,6 @@ regfile regfile(
 
 logic [24:0] raw_imm;
 assign raw_imm = instruction[31:7];
-wire[31:0] immediate;
 
 signext sign_extender(
     .raw_src(raw_imm),
@@ -167,7 +184,6 @@ signext sign_extender(
 
 // ALU
 
-wire [31:0] alu_result;
 logic [31:0] alu_src2;
 wire alu_zero;
 wire alu_lb;
@@ -188,17 +204,46 @@ alu alu_inst(
     .alu_lb(alu_lb)
 );
 
+logic led_enable;
+logic mem_enable;
+logic led_sel;
+
+// LED_DECODER
+mmio mmio_inst(
+    .mem_write(mem_write),
+    .alu_result(alu_result),
+
+    .led_enable(led_enable),
+    .mem_enable(mem_enable),
+    .led_sel(led_sel)
+);
+
 // BYTE_ENABLE_DECODER
 
 wire [3:0] byte_enable;
-wire [31:0] mem_write_data;
+wire [31:0] mem_led_write_data;
 
 byte_enable_decoder byte_enable_decoder_inst(
     .func3(f3),
     .alu_result(alu_result),
     .read_data2(read_data2),
     .byte_enable(byte_enable),
-    .write_data(mem_write_data)
+    .write_data(mem_led_write_data)
+);
+
+// PERIPHERALS MODULE
+
+logic [31:0] led_read_data;
+
+peripherals peripherals_inst(
+    .clk(clk),
+    .rst_n(rst_n),
+    .led_enable(led_enable),
+    .byte_enable(byte_enable),
+    .write_data(mem_led_write_data),
+
+    .led_output(led),
+    .led_read_data(led_read_data)
 );
 
 // DATA MEMORY
@@ -210,8 +255,8 @@ memory #(
     // Inputs
     .clk(clk),
     .address({alu_result[31:2], 2'b00}),
-    .write_data(mem_write_data),
-    .write_enable(mem_write),
+    .write_data(mem_led_write_data),
+    .write_enable(mem_enable),
     .byte_enable(byte_enable),
     .rst_n(1'b1),
 
@@ -219,11 +264,15 @@ memory #(
     .read_data(mem_read)
 );
 
-wire [31:0] masked_wb;
-wire valid;
+logic [31:0] read_data;
+
+always_comb begin : write_back_data_select
+    if(led_sel) read_data = led_read_data;
+    else read_data = mem_read;
+end
 
 reader reader_inst (
-    .mem_read(mem_read),
+    .mem_read(read_data),
     .func3(f3),
     .byte_enable(byte_enable),
 
