@@ -6,6 +6,8 @@ CPU running on the Real Digital Blackboard lighting up 10 LEDs:
 
 https://github.com/user-attachments/assets/1548b4cf-4b66-4f95-8433-e3351aa90bea
 
+The LED register is memory-mapped and supports both reads and writes, although the read path is not currently used by software. The hardware demonstration runs in three stages: the CPU first drives the LEDs through the register to produce a blinking pattern, then switch inputs are shown to drive corresponding LED outputs, and finally the reset button returns the program counter to its initial value so the program restarts from the beginning.
+
 ## Branches
 
 | Branch | What it contains |
@@ -50,8 +52,6 @@ No ECALL/EBREAK
 Single-Cycle, so clock is limited by longest path
 
 Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM/Instruction memory and LED addresses)
-
-LED register is read/write; hardware demo currently exercises writes, read-back not yet tested on the board.
 
 ## Author 
 Samuel Devotta, University of Southampton
