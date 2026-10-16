@@ -10,6 +10,14 @@ https://github.com/user-attachments/assets/7f6dae86-bdb9-423c-918d-5688394dd424
 single-cycle-edition : My CPU that works in simulation: 8 modules + a self-checking testbench for each module
 fpga-edition : Contains additional modules (with their respective testbenches) and few changes in existing modules to get the CPU to run on the FPGA
 
+## Features
+
+- All RV32I instructions except ECALL and EBREAK
+- Byte and halfword loads and stores (LB, LBU, LH, LHU, SB, SH)
+- Separate instruction and data memories
+- Self-checking testbench for every module
+- On hardware (FPGA branch): software drives LEDs through memory-mapped I/O
+
 ## Architecture
 
 <img width="1123" height="794" alt="datapath" src="https://github.com/user-attachments/assets/1e29cbe7-ab33-4e3a-b416-c49bf8a58246" />
@@ -27,10 +35,10 @@ fpga-edition : Contains additional modules (with their respective testbenches) a
 
 ## Running the simulation
 
-verilator --binary --trace -sv src/cpu.sv tb/test_cpu/test_cpu.sv
-cp tb/test_cpu/test_imemory.hex tb/test_cpu/test_dmemory.hex obj_dir/
-cd obj_dir
-./Vcpu
+- verilator --binary --trace -sv src/cpu.sv tb/test_cpu/test_cpu.sv
+- cp tb/test_cpu/test_imemory.hex tb/test_cpu/test_dmemory.hex obj_dir/
+- cd obj_dir
+- ./Vcpu
 
 ## Limitations
 
