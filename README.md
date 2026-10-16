@@ -8,8 +8,8 @@ https://github.com/user-attachments/assets/1401f442-7806-424b-8f02-0850f95cc8b2
 
 ## Branches
 
-single-cycle-edition : My CPU that works in simulation: 8 modules + a self-checking testbench for each module
-fpga-edition : Contains additional modules (with their respective testbenches) and few changes in existing modules to get the CPU to run on the FPGA
+| 'single-cycle-edition' | My CPU that works in simulation: 8 modules + a self-checking testbench for each module + system level tests |
+| 'fpga-edition' | The same CPU plus memory-mapped I/O (LED peripheral), top-level wrapper, clocking, and constraints for the RealDigital Blackboard |
 
 ## Features
 
