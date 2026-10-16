@@ -11,9 +11,11 @@ module test_peripherals;
     logic led_enable;
     logic [3:0] byte_enable;
     logic [31:0] write_data;
+    logic [9:0] sw_in;
 
     logic [9:0] led_output;
     logic [31:0] led_read_data;
+    logic [31:0] sw_read_data;
 
     peripherals p0(.*);
 
@@ -69,6 +71,10 @@ initial begin
 
     #1
     `assert(led_read_data, {22'b0, 10'h2AA})
+    sw_in = 10'b0101010101;
+
+    #1
+    `assert(sw_read_data, {22'b0, 10'h155})
 
     $finish;
 end
