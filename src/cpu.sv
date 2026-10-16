@@ -22,6 +22,8 @@ wire [31:0] read_data1;
 
 // ALU OUTPUT
 wire [31:0] alu_result;
+wire alu_zero;
+wire alu_lb;
 
 // READER OUTPUT
 wire [31:0] masked_wb;
@@ -185,8 +187,6 @@ signext sign_extender(
 // ALU
 
 logic [31:0] alu_src2;
-wire alu_zero;
-wire alu_lb;
 
 always_comb begin : srcBSelect
     if(alu_src == 1)
