@@ -51,7 +51,7 @@ cd obj_dir
 ```
 Successful run will produce this output:
 
-<img width="2854" height="1606" alt="image" src="https://github.com/user-attachments/assets/b1615d5d-9d6d-43ee-b2ee-aa24d368fcf5" />
+<img width="2874" height="1460" alt="image" src="https://github.com/user-attachments/assets/0749382b-ca3a-4ef9-bc72-f53a47616a69" />
 
 ## Limitations
 
