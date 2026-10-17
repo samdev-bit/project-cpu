@@ -4,7 +4,9 @@ A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with
 
 CPU running on the Real Digital Blackboard lighting up 10 LEDs:
 
-https://github.com/user-attachments/assets/1548b4cf-4b66-4f95-8433-e3351aa90bea
+| Blink and Switch demo | Switch-controlled delay demo |
+|---|---|
+| https://github.com/user-attachments/assets/1548b4cf-4b66-4f95-8433-e3351aa90bea | https://github.com/user-attachments/assets/911c5825-81b6-4557-9a39-33fd46442494 |
 
 The LED register is memory-mapped and supports both reads and writes, although the read path is not currently used by software. The hardware demonstration runs in three stages: the CPU first drives the LEDs through the register to produce a blinking pattern, then switch inputs are shown to drive corresponding LED outputs, and finally the reset button returns the program counter to its initial value so the program restarts from the beginning.
 
