@@ -36,7 +36,7 @@ initial begin
     logic [31:0] imem [127:0];
     logic [31:0] expected_instruction;
     logic [31:0] test_address;
-    $readmemh("test_imemory.hex", imem);
+    $readmemh("simulation_imemory.hex", imem);
 
     // Reset check
     rst_n = 1;
