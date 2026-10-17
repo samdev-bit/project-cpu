@@ -1,4 +1,4 @@
-## LED + Btn 0 .xdc for the Blackboard
+## LED + Btn 0 + Switches .xdc for the Blackboard
 
 ##Clock
 set_property -dict { PACKAGE_PIN H16   IOSTANDARD LVCMOS33 } [get_ports { clk }];
