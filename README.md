@@ -58,7 +58,7 @@ Unmapped stores are ignored
 
 1. Create a Vivado project for the Blackboard part.
 2. Add the sources, XDC and Clocking Wizard IP.
-3. Put the chosen hex file where $readmemh finds it.
+3. Put the chosen hex file in your src folder where $readmemh finds it (also remember to change the name of the file read by instruction memory in the `cpu.sv` module to the file you picked).
 4. Synthesise, implement, generate bitstream.
 5. Program via Hardware Manager.
 6. Press BTN0 to restart the program.
