@@ -50,9 +50,11 @@ Unmapped stores are ignored
 
 ## Timing and resources
 
-- WNS +12.5 ns, WHS +0.122 ns at 25 MHz
+- WNS +12.433 ns, WHS +0.122 ns at 25 MHz
 - WNS -10.1 ns at 100 MHz (single cycle was too slow for clock speed).
-- 3708 LUTs and 5853 FFs
+- 3215 LUTs and 4843 FFs
+
+(All stats based on build done with demo2_imemory.hex and post implementation)
 
 ## Build steps
 
