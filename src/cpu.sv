@@ -48,7 +48,7 @@ end
 wire [31:0] instruction;
 
 memory #(
-    .mem_init("test_imemory.hex")
+    .mem_init("simulation_imemory.hex")
 ) instruction_memory (
     // Memory inputs
     .clk(clk),
