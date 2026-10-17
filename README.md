@@ -1,21 +1,19 @@
 # project-cpu
 
-A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with self-checking testbenches and deployed on a Xilinx Zynq-7000 FPGA.
+A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with self-checking testbenches and deployed on a Xilinx Zynq-7000 FPGA. Verified in simulation (all RV32I except ECALL/EBREAK) and the fpga_edition branch is verified on a RealDigital Blackboard at 25 MHz.
 
-CPU running on the Real Digital Blackboard lighting up 10 LEDs:
+Demo:
 
-| Blink and Switch demo | Switch-controlled delay demo |
-|---|---|
-| https://github.com/user-attachments/assets/1548b4cf-4b66-4f95-8433-e3351aa90bea | https://github.com/user-attachments/assets/911c5825-81b6-4557-9a39-33fd46442494 |
+https://github.com/user-attachments/assets/d9808876-3356-4eb3-b630-47ba5e32da68
 
-The LED register is memory-mapped and supports both reads and writes, although the read path is not currently used by software. The hardware demonstration runs in three stages: the CPU first drives the LEDs through the register to produce a blinking pattern, then switch inputs are shown to drive corresponding LED outputs, and finally the reset button returns the program counter to its initial value so the program restarts from the beginning.
+FPGA edition running on the RealDigital Blackboard. Switches `sw[1:0]` select the blink rate, set by software through memory-mapped I/O
 
 ## Branches
 
 | Branch | What it contains |
 |---|---|
-| 'single-cycle-edition' | My CPU that works in simulation: 8 modules + a self-checking testbench for each module + system level tests |
-| 'fpga-edition' | The same CPU plus memory-mapped I/O (LED peripheral), top-level wrapper, clocking, and constraints for the RealDigital Blackboard |
+| `single-cycle-edition` | My CPU that works in simulation: 8 modules + a self-checking testbench for each module + system level tests |
+| [`fpga_edition`](../../tree/fpga_edition) | The same CPU plus memory-mapped I/O, top-level wrapper, clocking, and constraints for the RealDigital Blackboard |
 
 ## Features
 
@@ -23,7 +21,7 @@ The LED register is memory-mapped and supports both reads and writes, although t
 - Byte and halfword loads and stores (LB, LBU, LH, LHU, SB, SH)
 - Separate instruction and data memories
 - Self-checking testbench for every module
-- On hardware (FPGA branch): software drives LEDs through memory-mapped I/O
+- The FPGA edition adds memory-mapped LED and switch I/O and runs on the RealDigital Blackboard. See [fpga_edition](../../tree/fpga_edition)
 
 ## Architecture
 
@@ -42,18 +40,26 @@ The LED register is memory-mapped and supports both reads and writes, although t
 
 ## Running the simulation
 
-- verilator --binary --trace -sv src/cpu.sv tb/test_cpu/test_cpu.sv
-- cp tb/test_cpu/test_imemory.hex tb/test_cpu/test_dmemory.hex obj_dir/
-- cd obj_dir
-- ./Vcpu
+Requires Verilator version 5.x (I used 5.046)
+
+```bash
+cd src/
+verilator --binary --trace -sv cpu.sv ../tb/test_cpu/test_cpu.sv
+cp ../tb/test_cpu/test_imemory.hex ../tb/test_cpu/test_dmemory.hex obj_dir/
+cd obj_dir
+./Vcpu
+```
+Successful run will produce this output:
+
+<img width="2854" height="1606" alt="image" src="https://github.com/user-attachments/assets/b1615d5d-9d6d-43ee-b2ee-aa24d368fcf5" />
 
 ## Limitations
 
-No ECALL/EBREAK
-
-Single-Cycle, so clock is limited by longest path
-
-Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM/Instruction memory and LED addresses)
+- No ECALL/EBREAK
+- Single-Cycle, so clock is limited by longest path
+- Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM/Instruction memory)
+- No CSRs, interrupts or exceptions
 
 ## Author 
+
 Samuel Devotta, University of Southampton
