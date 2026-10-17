@@ -83,7 +83,7 @@ Run the same way as in [`single-cycle-edition`](../../tree/single-cycle-edition)
 ## Limitations
 
 - No ECALL/EBREAK, CSRs, interrupts.
-- Single-cycle, limited to 50 MHz by the critical path.
+- Single-cycle, limited to 50 MHz (though 25 MHz is used in all demos) by the critical path.
 - `memory.sv` indexes with address[31:2], so out-of-range accesses return x in simulation but alias on hardware. Demo programs stay in range.
 - Hardware demos only use LEDs and switches (no buttons beyond reset, no UART).
 - Switches are sampled once per phase in demo 2, so changes take effect after the current phase.
