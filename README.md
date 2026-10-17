@@ -46,7 +46,6 @@ Unmapped stores are ignored
 - 100 MHz in, Clocking Wizard to 25 MHz, locked holds the CPU in reset until the clock is stable.
 - Two-flop synchronizers for the reset button and the switches to avoid metastability from asynchronous inputs.
 - Power-on reset: synchronizer flops initialise to 1 so CPU boots in reset.
-- Clocking Wizard settings : 100 MHz input frequency, 25 MHz output frequency, reset and power_down disabled, locked enabled
 
 ## Timing and resources
 
@@ -55,6 +54,16 @@ Unmapped stores are ignored
 - 3215 LUTs and 4843 FFs
 
 (All stats based on build done with demo2_imemory.hex and post implementation)
+
+## How to set-up clocking wizard
+
+1. Open IP Catalog (Flow Navigator, under Project Manager).
+2. Search for Clocking Wizard and double-click it.
+3. Set the component name to clk_wiz_0 (it must match the instance in top.sv).
+4. Clocking Options tab: primary input frequency 100 MHz.
+5. Output Clocks tab: enable clk_out1 and set it to 25 MHz.
+6. Untick reset and power_down, and keep locked.
+7. Click OK, then Generate.
 
 ## Build steps
 
