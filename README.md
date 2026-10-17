@@ -45,7 +45,7 @@ Requires Verilator version 5.x (I used 5.046)
 ```bash
 cd src/
 verilator --binary --trace -sv cpu.sv ../tb/test_cpu/test_cpu.sv
-cp ../tb/test_cpu/test_imemory.hex ../tb/test_cpu/test_dmemory.hex obj_dir/
+cp ../tb/test_cpu/simulation_imemory.hex ../tb/test_cpu/test_dmemory.hex obj_dir/
 cd obj_dir
 ./Vcpu
 ```
