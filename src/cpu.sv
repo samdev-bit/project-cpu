@@ -207,18 +207,15 @@ alu alu_inst(
 
 logic led_enable;
 logic mem_enable;
-logic sw_enable;
 logic [1:0] w_sel;
 
 // IO_DECODER
 mmio mmio_inst(
-    .reg_write(reg_write),
     .mem_write(mem_write),
     .alu_result(alu_result),
 
     .led_enable(led_enable),
     .mem_enable(mem_enable),
-    .sw_enable(sw_enable),
     .w_sel(w_sel)
 );
 
