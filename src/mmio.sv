@@ -2,12 +2,10 @@
 
 module mmio (
     input logic mem_write,
-    input logic reg_write,
     input logic [31:0] alu_result,
 
     output logic led_enable,
     output logic mem_enable,
-    output logic sw_enable,
     output logic [1:0] w_sel
 );
 
@@ -30,6 +28,5 @@ assign ram_sel = (alu_result[31:28] == 4'h0);
 
 assign led_enable = mem_write & led_sel;
 assign mem_enable = mem_write & ram_sel;
-assign sw_enable = reg_write & (w_sel == 2'b00);
 
 endmodule

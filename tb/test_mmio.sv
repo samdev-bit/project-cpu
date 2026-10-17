@@ -7,12 +7,10 @@
 
 module test_mmio;
     logic mem_write;
-    logic reg_write;
     logic [31:0] alu_result;
 
     logic led_enable;
     logic mem_enable;
-    logic sw_enable;
     logic [1:0] w_sel;
 
     mmio m0 (.*);
@@ -25,11 +23,9 @@ end
 initial begin
     alu_result = 32'h00000000;
     mem_write = 1'b1;
-    reg_write = 1'b1;
     #1
     `assert(mem_enable, 1'b1)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b10)
 
     #1
@@ -37,7 +33,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b1)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b10)
 
     #1
@@ -45,7 +40,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b1)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b11)
 
     #1
@@ -53,7 +47,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b1)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b11)
 
     #1
@@ -62,7 +55,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b11)
 
     #1
@@ -71,7 +63,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b10)
 
     #1
@@ -80,7 +71,6 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b1)
     `assert(w_sel, 2'b00)
 
     #1
@@ -89,27 +79,22 @@ initial begin
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b1)
     `assert(w_sel, 2'b00)
 
     #1
     alu_result = 32'h10000006;
     mem_write = 1'b0;
-    reg_write = 1'b0;
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b00)
 
     #1
     alu_result = 32'h10000008;
     mem_write = 1'b0;
-    reg_write = 1'b1;
     #1
     `assert(mem_enable, 1'b0)
     `assert(led_enable, 1'b0)
-    `assert(sw_enable, 1'b0)
     `assert(w_sel, 2'b10)
 end
 
