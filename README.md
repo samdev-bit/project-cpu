@@ -21,7 +21,7 @@ FPGA edition running on the RealDigital Blackboard. Switches `sw[1:0]` select th
 - Byte and halfword loads and stores (LB, LBU, LH, LHU, SB, SH)
 - Separate instruction and data memories
 - Self-checking testbench for every module
-- The FPGA edition adds memory-mapped LED and switch I/O and runs on the RealDigital Blackboard. See [fpga_edition](../../tree/fpga_edition)
+- The FPGA edition adds memory-mapped I/O and runs on the RealDigital Blackboard. See [fpga_edition](../../tree/fpga_edition)
 
 ## Architecture
 
