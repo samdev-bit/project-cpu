@@ -32,11 +32,11 @@ FPGA edition running on the RealDigital Blackboard. Switches `sw[1:0]` select th
 | `alu.sv` | Arithmetic, logic, shifts, comparisons |
 | `control.sv` | Main decoder, ALU decoder, branch logic |
 | `regfile.sv` | 32 x 32-bit registers, x0 hardwired to 0 |
-| `signext.sv` | Immediate generation for all formats |
-| `memory.sv` | Word memory with byte enables, used for instructions and data |
+| `signext.sv` | Immediate generation for all instruction types |
+| `memory.sv` | Word memory with byte enables, used for instruction mem and data mem |
 | `byte_enable_decoder.sv` | Converts SB/SH/SW into byte masks and shifted data |
-| `reader.sv` | Extracts and sign-extends bytes/halfwords on loads |
-| `cpu.sv` | Top-level datapath |
+| `reader.sv` | Extracts and sign-extends bytes/halfwords for lb, lh |
+| `cpu.sv` | Connects all modules together (includes additional MUX logic) |
 
 ## Running the simulation
 
