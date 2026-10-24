@@ -1,6 +1,6 @@
 # project-cpu
 
-A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with self-checking testbenches and deployed on a Xilinx Zynq-7000 FPGA. Verified in simulation (all RV32I except ECALL/EBREAK) and the fpga_edition branch is verified on a RealDigital Blackboard at 25 MHz.
+A single-cycle 32-bit RISC-V (RV32I) CPU written in SystemVerilog, verified with self-checking testbenches and deployed on a Xilinx Zynq-7000 FPGA. Verified in simulation (all RV32I except ECALL/EBREAK/FENCE) and the fpga_edition branch is verified on a RealDigital Blackboard at 25 MHz.
 
 Demo:
 
@@ -17,7 +17,7 @@ FPGA edition running on the RealDigital Blackboard. Switches `sw[1:0]` select th
 
 ## Features
 
-- All RV32I instructions except ECALL and EBREAK
+- All RV32I instructions except ECALL, EBREAK and FENCE
 - Byte and halfword loads and stores (LB, LBU, LH, LHU, SB, SH)
 - Separate instruction and data memories
 - Self-checking testbench for every module
@@ -55,7 +55,7 @@ Successful run will produce this output:
 
 ## Limitations
 
-- No ECALL/EBREAK
+- No ECALL/EBREAK/FENCE
 - Single-Cycle, so clock is limited by longest path
 - Memory array only has 128 entries but is indexed with 30 bits (my program only touches in range RAM/Instruction memory)
 - No CSRs, interrupts or exceptions
